@@ -31,3 +31,5 @@ ios/
 linux/
 macos/
 windows/
+
+firebase_options.dart
