@@ -17,6 +17,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   rive: ^0.9.1
   universal_platform: ^1.0.0+1
+  page_transition: ^2.0.9
   firebase_core: ^2.7.0
   firebase_database: ^10.0.16
 
