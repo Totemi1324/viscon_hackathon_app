@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/theme_service.dart';
 
-import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
 import './route_register.dart';
 
 void main() {
@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: "NerdHerd",
           theme: activeTheme,
-          initialRoute: LogInScreen.routeName,
+          initialRoute: HomeScreen.routeName,
           routes: {
-            LogInScreen.routeName: (context) => const LogInScreen(),
+            HomeScreen.routeName: (context) => const HomeScreen(),
           },
           onGenerateRoute: RouteRegister.onGenerateRoute,
         ),
