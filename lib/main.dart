@@ -6,10 +6,6 @@ import 'bloc/theme_service.dart';
 import 'screens/login_screen.dart';
 import './route_register.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 void main() {
   runApp(const MyApp());
 }
