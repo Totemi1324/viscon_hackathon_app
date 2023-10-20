@@ -1,5 +1,5 @@
 name: viscon_hackathon_app
-description: A new Flutter project.
+description: Engage in collaborative learning, effectively and without the social awkwardness! NerdHerd - your study group finder
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -20,4 +20,4 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
-  
+
