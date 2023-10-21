@@ -13,16 +13,16 @@ class CourseData {
 
   factory CourseData.fromFirestore(DocumentSnapshot docSnap) {
     final lecsRaw = docSnap.get('lecturer') as List<dynamic>;
-    Map<String, String> lecsParsed = {};
+    List<dynamic> lecsParsed = [];
 
     for (var lec in lecsRaw) {
       final lecMap = lec as Map<String, dynamic>;
-      final datapoint = lecMap["first_name"] as String;
+      lecsParsed.add(lecMap);
     }
 
     return CourseData(
       id: docSnap.get('id'),
-      lecturer: [lecsParsed],
+      lecturer: lecsParsed as List<Map<String,String>>,
       title: docSnap.get('title'),
     );
   }
