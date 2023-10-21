@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen/assets.gen.dart';
 
 class WithTabBar extends StatefulWidget {
   final Widget myStudyGroupsBody;
@@ -52,13 +53,24 @@ class _WithTabBarState extends State<WithTabBar>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 32,
-            fontWeight: FontWeight.w800,
-          ),
+        title: Row(
+          children: [
+            Image.asset(
+              Assets.images.logoSmall.path,
+              height: 40,
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            Text(
+              widget.title,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(
