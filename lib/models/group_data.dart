@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/group_course_properties.dart';
@@ -10,7 +9,7 @@ class GroupData {
   String ownerId;
   String? privateDescription;
   String? publicDescription;
-  List<Bool>? studyTime;
+  List<bool>? studyTime;
   String title;
 
   GroupData({
