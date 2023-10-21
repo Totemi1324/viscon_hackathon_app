@@ -18,7 +18,6 @@ class _SignupFormState extends State<SignupForm> {
   String _email = "";
   String _password = "";
   String _passwordRepetition = "";
-  bool _passwordsMatch = false;
   bool _passwordObscured = true;
   bool _passwordRepetitionObscured = true;
 
@@ -64,9 +63,6 @@ class _SignupFormState extends State<SignupForm> {
         onChanged: (newValue) {
           if (newValue != null) {
             _password = newValue;
-            if (_passwordRepetition != null) {
-              _passwordsMatch = (_password == _passwordRepetition);
-            }
           }
         },
         onSaved: (newValue) {
@@ -110,9 +106,6 @@ class _SignupFormState extends State<SignupForm> {
         onChanged: (newValue) {
           if (newValue != null) {
             _passwordRepetition = newValue;
-            if (_password != null) {
-              _passwordsMatch = (_password == _passwordRepetition);
-            }
           }
         },
         validator: (value) {
