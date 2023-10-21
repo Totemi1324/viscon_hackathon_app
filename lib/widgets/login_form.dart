@@ -58,7 +58,7 @@ class _LogInFormState extends State<LogInForm> {
         obscureText: _passwordObscured,
         focusNode: _passwordFocusNode,
         enableSuggestions: false,
-        onFieldSubmitted: (_) {},
+        onFieldSubmitted: (_) => _onSignInPressed(buildContext),
         onSaved: (newValue) {
           if (newValue != null) {
             _password = newValue;

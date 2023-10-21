@@ -95,8 +95,8 @@ class _SignupFormState extends State<SignupForm> {
           obscureText: _passwordRepetitionObscured,
           focusNode: _passwordConfirmationFocusNode,
           enableSuggestions: false,
-          onFieldSubmitted: (_) {},
-          onSaved: (newValue) {},
+          onFieldSubmitted: (_) => _onSignUpPressed(buildContext),
+          onSaved: (_) {},
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Please reenter your Password";
@@ -124,7 +124,7 @@ class _SignupFormState extends State<SignupForm> {
                 }),
               )));
 
-  void _onSignInPressed(BuildContext buildContext) async {
+  void _onSignUpPressed(BuildContext buildContext) async {
     setState(() {
       _isLoading = true;
     });
@@ -224,7 +224,7 @@ class _SignupFormState extends State<SignupForm> {
               height: 50,
             ),
             ElevatedButton(
-              onPressed: _isLoading ? null : () => _onSignInPressed(context),
+              onPressed: _isLoading ? null : () => _onSignUpPressed(context),
               child: _isLoading
                   ? const Text("Please wait...")
                   : const Text("Sign up"),
