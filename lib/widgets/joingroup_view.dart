@@ -11,24 +11,39 @@ class JoinGroupView extends StatelessWidget {
 
   Widget courseFilters(List<String> courseTitles) => SizedBox(
         height: 60,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: courseTitles.length,
-          itemBuilder: (context, index) => Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: ToggleButton(
-                courseTitles[index],
-                valueCallback: (courseTitle, toggled) {
-                  if (toggled) {
-                    selectedCourses.add(courseTitle);
-                  } else {
-                    selectedCourses.remove(courseTitle);
-                  }
-                },
+        child: ShaderMask(
+          shaderCallback: (bounds) {
+            return const LinearGradient(
+              colors: [
+                Colors.white,
+                Colors.transparent,
+              ],
+              stops: [0.9, 1],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              tileMode: TileMode.mirror,
+            ).createShader(bounds);
+          },
+          blendMode: BlendMode.dstIn,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: courseTitles.length,
+            itemBuilder: (context, index) => Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: ToggleButton(
+                  courseTitles[index],
+                  valueCallback: (courseTitle, toggled) {
+                    if (toggled) {
+                      selectedCourses.add(courseTitle);
+                    } else {
+                      selectedCourses.remove(courseTitle);
+                    }
+                  },
+                ),
               ),
             ),
           ),
