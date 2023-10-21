@@ -138,7 +138,7 @@ class _SignupFormState extends State<SignupForm> {
     try {
       await buildContext
           .read<AuthenticationService>()
-          .attemptSignUp(_email, _password);
+          .attemptSignUp(_email.trim(), _password);
     } catch (error) {
       print(error.toString());
       setState(() {

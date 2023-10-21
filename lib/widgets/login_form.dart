@@ -65,26 +65,22 @@ class _LogInFormState extends State<LogInForm> {
           }
         },
         decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 3,
-              color: Theme.of(context).colorScheme.onSurface,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 3,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              borderRadius: BorderRadius.circular(25.0),
             ),
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _passwordObscured
-                ? Icons.visibility_rounded
-                : Icons.visibility_off_rounded
-
-            ),
-            tooltip: "Show password",
-            onPressed:() => setState(() {
-              _passwordObscured = !_passwordObscured;
-            }),
-            )
-        ),
+            suffixIcon: IconButton(
+              icon: Icon(_passwordObscured
+                  ? Icons.visibility_rounded
+                  : Icons.visibility_off_rounded),
+              tooltip: "Show password",
+              onPressed: () => setState(() {
+                _passwordObscured = !_passwordObscured;
+              }),
+            )),
       );
 
   void _onSignInPressed(BuildContext buildContext) async {
@@ -104,7 +100,7 @@ class _LogInFormState extends State<LogInForm> {
     final navigator = Navigator.of(buildContext);
 
     try {
-      await authService.attemptLogIn(_email, _password);
+      await authService.attemptLogIn(_email.trim(), _password);
 
       final verified = authService.isUserVerified();
       if (verified) {
