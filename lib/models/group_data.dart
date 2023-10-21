@@ -1,18 +1,18 @@
 import 'dart:ffi';
 import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../models/group_course_properties.dart';
 
 
 class GroupData {
+  Map<String, GroupCourseProperties>? courseProperties;
+  List<String>? courses;
   List<String>? members;
-  List<Bool>? studyTime;
-  List<GroupCourseProperties>? courseProperties;
   String ownerId;
   String? privateDescription;
   String? publicDescription;
+  List<Bool>? studyTime;
   String title;
 
   GroupData({
@@ -23,26 +23,38 @@ class GroupData {
     this.courseProperties,
     this.privateDescription,
     this.publicDescription,
+    this.courses,
   });
 
   factory GroupData.fromFirestore(DocumentSnapshot docSnap) {
-    
-    List<GroupCourseProperties> localCourseProperties = [];
-    Map<String, Map> courses = docSnap.get("courseProperties");
-    
-    int i = 0;
-    courses.forEach((k, v) {
-      localCourseProperties.add(GroupCourseProperties.fromMap(k, v));
-      i++;
-    });
+      Map<String, GroupCourseProperties> coursePreferencesLocal = <String, GroupCourseProperties>{};
+      Map<String, Map> coursePreferencesRaw = docSnap.get('coursePreferences');
 
-    return GroupData(ownerId: docSnap.get("ownerID"), 
-      title: docSnap.get("title"), 
-      members: docSnap.get("members"), 
-      studyTime: docSnap.get("studyTime"), 
-      courseProperties: localCourseProperties,
-      privateDescription: docSnap.get("privateDescription"),
-      publicDescription: docSnap.get("publicDescription"),
+      coursePreferencesRaw.forEach((key, value) { 
+        coursePreferencesLocal.putIfAbsent(key, () => GroupCourseProperties.fromMap(value));
+      });
+
+    return GroupData(ownerId: docSnap.get('ownerID'), 
+      title: docSnap.get('title'), 
+      members: docSnap.get('members'), 
+      courses: docSnap.get('courses'),
+      studyTime: docSnap.get('studyTime'), 
+      courseProperties: coursePreferencesLocal,
+      privateDescription: docSnap.get('privateDescription'),
+      publicDescription: docSnap.get('publicDescription'),
       );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return <String, dynamic> {
+      'ownerId': ownerId,
+      'title': title,
+      'members': members,
+      'courses': courses,
+      'studyTime': studyTime,
+      'courseProperties': courseProperties,
+      'privateDescription': privateDescription,
+      'publicDescription': publicDescription,
+    };
   }
 }

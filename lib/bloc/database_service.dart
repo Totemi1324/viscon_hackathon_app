@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,43 +26,50 @@ class DatabaseService extends Cubit<UserData> {
       return;
     },
     onError: (e) {
-      final userData = UserData.defaultUser().firestoreRepresentation();
+      final userData = UserData.defaultUser().toFirestore();
       newUserRef.set(userData);
     }
     );
     
   }
 
-  Future updateUserData(String userId, List<UserCoursePreferences> courses,
-      int preferredGroupSize,
-      {String? firstName, String? lastName}) async {
-        Map<String, dynamic> result = <String, dynamic> {
-          "courses" : courses,
-          "groupSize" : preferredGroupSize,
-          "studyTime" : getUserDataPoint(userId, "studyTime"),
-          "firstName" : getUserDataPoint(userId, "firstName"),
-          "lastName" : getUserDataPoint(userId, "lastName"),
-          "groups" : getUserDataPoint(userId, "groups"),
-          };
+  Future updateUserData(String userId, List<String> courses,
+      int groupSize, List<String> groups,
+      {String? firstName, String? lastName, List<bool>? studyTime}) async {
+        Map<String, dynamic>? userData;
+        _database.collection('users').doc(userId).get().then((docSnap) {
+          if(docSnap.exists) {
+            userData = docSnap.data();
+          }
+          else {
+            return;
+          }
+        });
+        userData!['courses'] = courses;
+        userData!['groupSize'] = groupSize;
+        userData!['groups'] = groups;
         if (firstName != null) {
-          result["firstName"] = firstName;
+          userData!["firstName"] = firstName;
         }
         if (lastName != null) {
-          result["lastName"] = lastName;
+          userData!["lastName"] = lastName;
         }
-        _database.collection("users").doc(userId).set(result);
+        if (studyTime != null) {
+          userData!['studyTime'] = studyTime;
+        }
+        _database.collection("users").doc(userId).set(userData!);
       }
 
-  Future<List<CourseData>> getCoursesForQuery(String courseId) async {
+  Future<List<String>> getCoursesForQuery(String courseId) async {
     final coursesRef = _database.collection("courses");
-    List<CourseData> result = [];
+    List<String> result = [];
     coursesRef.where("id", isEqualTo: "courseId")
       .get()
       .then((QuerySnapshot querySnapshot) {
           for (var docSnapshot in querySnapshot.docs)
           {
             //read out data
-            result.add(CourseData.fromFirestore(docSnapshot));
+            result.add(CourseData.fromFirestore(docSnapshot).id);
           }
         },
         onError: (e) {
@@ -72,43 +80,20 @@ class DatabaseService extends Cubit<UserData> {
     return result;
   }
 
-  Future<T?> getUserDataPoint<T>(String userId, String dataPoint) async {//dataPoint is the Name of the data point in Firestore
-    var docRef = _database.collection("users").doc(userId);
-    T? result;
-    docRef.get().then((docSnap) {
-      if(docSnap.exists) {
-        return docSnap.get(dataPoint);
-      }
-      else {
-        return null;
-      }
-      
-    });
-
-    return null;
-  }
+  
 
   Future<T?> getUserCoursePreferenceDataPoint<T>(String userCoursePreferenceId, String dataPoint) async {//dataPoint is the Name of the data point in Firestore
-    var docRef = _database.collection("userCoursePreference").doc(userCoursePreferenceId);
-    T? result;
-    docRef.get().then((docSnap) {
-      if(docSnap.exists) {
-        return docSnap.get(dataPoint);
+    _database.collection('userCoursePreferences').doc(userCoursePreferenceId).get().then((docSnap) {
+      if(docSnap.exists && docSnap.data() != null) {
+        return docSnap.data()![dataPoint];
       }
-      else {
-        return null;
-      }
-      
     });
-
     return null;
   }
 
-  Future<List<GroupData>?> getUserGroups(String userId) async {
-    return getUserDataPoint<List<GroupData>>(userId, "groups");
+  Future<List<String>?> getUserGroups(String userId) async {
+    return getUserDataPoint<List<String>>(userId, "groups");
   }
-
-
 
   Future<GroupData?> getGroup(String groupId) async {
     _database.collection("groups").doc(groupId).get().then((docSnap) {
@@ -118,6 +103,41 @@ class DatabaseService extends Cubit<UserData> {
       }
     });
 
+    return null;
+  }
+
+  String getUserCoursePreferenceId(String userId, String courseId) {
+    return userId + "-" + courseId;
+  }
+  
+  Future<DocumentSnapshot?> getDocSnapFromUserId(String userId) async {
+    _database.collection('users').doc(userId).get().then((docSnap) {
+      if(docSnap.exists) {
+        return docSnap;
+      }
+    });
+    return null;
+  }
+
+  DocumentReference getDocRefFromUserId(String userId) {
+    return _database.collection('users').doc(userId);
+  }
+
+  Future<Map<String, dynamic>?> getDataFromUserId(String userId) async {
+    _database.collection('users').doc(userId).get().then((docSnap) {
+      if(docSnap.exists) {
+        return docSnap.data();
+      }
+    });
+    return null;
+  } 
+  
+  Future<T?> getUserDataPoint<T>(String userId, String dataPoint) async {//dataPoint is the Name of the data point in Firestore
+    _database.collection('users').doc(userId).get().then((docSnap) {
+      if(docSnap.exists && docSnap.data() != null) {
+        return docSnap.data()![dataPoint];
+      }
+    });
     return null;
   }
 }

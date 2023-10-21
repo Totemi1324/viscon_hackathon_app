@@ -1,21 +1,19 @@
 class GroupCourseProperties {
-  String courseId;
-  int? skillLevel;
-  bool? homogenous;
+  int? courseSkilLevel;
+  bool? homogenes;
   Map<String, bool>? learnMethods;
 
   GroupCourseProperties({
-    required this.courseId,
-    this.skillLevel,
-    this.homogenous,
+    this.courseSkilLevel,
+    this.homogenes,
     this.learnMethods,
   });
 
-  factory GroupCourseProperties.fromMap(String localCourseId, Map<dynamic, dynamic> map) {
-    return GroupCourseProperties(courseId: localCourseId, 
-      skillLevel: map["couresSkilLevel"],
-      homogenous: map["homogenes"],
+  factory GroupCourseProperties.fromMap(Map<dynamic, dynamic> map) {
+    return GroupCourseProperties(courseSkilLevel: map["couresSkilLevel"],
+      homogenes: map["homogenes"],
       learnMethods: map["learnMethods"],
       );
   }
+
 }

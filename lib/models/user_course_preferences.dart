@@ -1,23 +1,38 @@
-import './learning_method.dart';
-import './niveau.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserCoursePreferences {
   String courseId;
-  Set<LearningMethod> preferredLearningMethods;
-  int skillLevel;
-  Niveau preferredNiveau;
+  List<bool> learnMethods;
+  int courseSkilLevel;
+  bool homogenes;
 
   UserCoursePreferences({
     required this.courseId,
-    required this.skillLevel,
-    required this.preferredNiveau,
-    required this.preferredLearningMethods,
+    required this.courseSkilLevel,
+    required this.homogenes,
+    required this.learnMethods,
   });
 
   factory UserCoursePreferences.defaultPrefs() => UserCoursePreferences(
         courseId: "",
-        skillLevel: 1,
-        preferredNiveau: Niveau.mixed,
-        preferredLearningMethods: {},
+        courseSkilLevel: 1,
+        homogenes: false,
+        learnMethods: [false, false, false, false, false,],
       );
+
+  factory UserCoursePreferences.fromFirestore(DocumentSnapshot docSnap) {
+    return UserCoursePreferences(courseId: docSnap.get('courseId'), 
+      courseSkilLevel: docSnap.get('courseSkilLevel'), 
+      homogenes: docSnap.get('homogenes'), 
+      learnMethods: docSnap.get('learnMethods'),
+      );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return <String, dynamic> {'courseId' : courseId,
+      'courseSkilLevel' : courseSkilLevel,
+      'homogenes' : homogenes,
+      'learnMethods' : learnMethods,
+    };
+  }
 }

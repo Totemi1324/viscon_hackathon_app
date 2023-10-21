@@ -1,39 +1,47 @@
-import './user_course_preferences.dart';
-import '../models/group_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class UserData {
+  List<String> courses;
   String? firstName;
   String? lastName;
-  List<UserCoursePreferences> courses;
-  int preferredGroupSize;
+  int groupSize;
   List<bool>? studyTime;
-  List<GroupData>? groups;
+  List<String>? groups;
 
   UserData({
     required this.courses,
-    required this.preferredGroupSize,
+    required this.groupSize,
     this.firstName,
     this.lastName,
-    this.studyTime
+    this.studyTime,
+    this.groups,
   });
 
   factory UserData.defaultUser() => UserData(
         courses: [],
-        preferredGroupSize: 2,
+        groupSize: 2,
         //studyTime: [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,]
       );
 
-  Map<String, dynamic> firestoreRepresentation() {
-    final _userData = <String, dynamic>{
+  Map<String, dynamic> toFirestore() {
+    return <String, dynamic>{
       "firstName" : firstName,
       "lastName" : lastName,
       "courses" : courses,
-      "groupSize" : preferredGroupSize,
-      "studyTime" : studyTime
+      "groupSize" : groupSize,
+      "studyTime" : studyTime,
+      "groups" : groups,
     };
-    return _userData;
   }
 
-  
+  factory UserData.fromFirestore(DocumentSnapshot docSnap) {
+    return UserData(courses: docSnap.get('groups'), 
+      firstName: docSnap.get('firstName'),
+      groupSize: docSnap.get('groupSize'),
+      groups: docSnap.get('groups'),
+      lastName: docSnap.get('lastName'),
+      studyTime: docSnap.get('studyTime'),
+      );
+  }
 }
