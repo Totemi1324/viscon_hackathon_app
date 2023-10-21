@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import './base/with_tabbar.dart';
 
-import '../widgets/mystudygroups_view.dart';
 import '../widgets/joingroup_view.dart';
+import '../widgets/mystudygroups_view.dart';
 import '../widgets/creategroup_view.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -18,11 +18,11 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const WithTabBar(
+    return WithTabBar(
       title: "NerdHerd",
-      myStudyGroupsBody: MyStudyGroupsView(),
+      myStudyGroupsBody: const MyStudyGroupsView(),
       joinGroupBody: JoinGroupView(),
-      createGroupBody: CreateGroupView(),
+      createGroupBody: const CreateGroupView(),
     );
   }
 }
