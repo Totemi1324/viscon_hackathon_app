@@ -35,7 +35,6 @@ class DatabaseService extends Cubit<UserData> {
   Future updateUserData(String userId, List<UserCoursePreferences> courses,
       int preferredGroupSize,
       {String? firstName, String? lastName}) async {
-        var docRef = _database.collection("users").doc("userId");
         Map<String, dynamic> result = <String, dynamic> {
           "courses" : courses,
           "groupSize" : preferredGroupSize,
@@ -50,7 +49,7 @@ class DatabaseService extends Cubit<UserData> {
         if (lastName != null) {
           result["lastName"] = lastName;
         }
-      
+        _database.collection("users").doc(userId).set(result);
       }
 
   Future<List<CourseData>> getCoursesForQuery(String courseId) async {
@@ -105,7 +104,20 @@ class DatabaseService extends Cubit<UserData> {
     return null;
   }
 
-  List<GroupData> getUserGroups(String userId) {}
+  Future<List<GroupData>?> getUserGroups(String userId) async {
+    return getUserDataPoint<List<GroupData>>(userId, "groups");
+  }
 
-  Future<GroupData> getGroup(String groupId) {}
+
+
+  Future<GroupData?> getGroup(String groupId) async {
+    _database.collection("groups").doc(groupId).get().then((docSnap) {
+      if(docSnap.exists)
+      {
+        return GroupData.fromFirestore(docSnap);
+      }
+    });
+
+    return null;
+  }
 }
