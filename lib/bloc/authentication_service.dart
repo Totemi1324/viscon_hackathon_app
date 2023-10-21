@@ -8,6 +8,8 @@ import '../models/user_credentials.dart';
 class AuthenticationService extends Cubit<UserCredentials> {
   final _auth = FirebaseAuth.instance;
 
+  UserCredential? _credentials;
+
   /*static AuthenticationError _firebaseErrorCodes(String errorCode) {
     switch (errorCode) {
       case "email-already-in-use":
@@ -56,17 +58,12 @@ class AuthenticationService extends Cubit<UserCredentials> {
   }
 
   Future attemptLogIn(String email, String password) async {
-    try {
+    
       final credentials = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       _credentials = credentials;
-    } on FirebaseAuthException catch (error) {
-      throw AuthenticationException(_firebaseErrorCodes(error.code));
-    } catch (error) {
-      rethrow;
-    }
   }
 
   Future<bool> attemptAutoLogIn() async {
@@ -99,5 +96,23 @@ class AuthenticationService extends Cubit<UserCredentials> {
   }
 
   // Neu: Future<bool> sendConfirmationEmail() async
+  Future sendVerificationEmail() async {
+    User? user;
+    user = _auth.currentUser;
+    if(user != null) {
+       await user.sendEmailVerification();     
+    }
+    
+  }
+
   // Neu: Future<bool> isUserConfirmed()
+  bool isUserVerified() {
+    User? user;
+    user = _auth.currentUser;
+    if(user != null) {
+      return user.emailVerified;
+    }
+    return false;
+  }
+
 }
