@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class Flat extends StatelessWidget {
   final Widget body;
+  final String? title;
 
-  const Flat({required this.body, super.key});
+  const Flat({required this.body, this.title, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +14,7 @@ class Flat extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        title: title != null ? Text(title!) : null,
       ),
       body: Center(
         child: ConstrainedBox(
