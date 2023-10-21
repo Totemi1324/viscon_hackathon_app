@@ -18,6 +18,9 @@ class _SignupFormState extends State<SignupForm> {
   String _email = "";
   String _password = "";
   String _passwordRepetition = "";
+  bool _passwordsMatch = false;
+  bool _passwordObscured = true;
+  bool _passwordRepetitionObscured = true;
 
   Widget emailTextField(BuildContext buildContext) => TextFormField(
         style: Theme.of(context).textTheme.bodyMedium,
@@ -53,7 +56,7 @@ class _SignupFormState extends State<SignupForm> {
   Widget passwordTextField(BuildContext buildContext) => TextFormField(
         style: Theme.of(context).textTheme.bodyMedium,
         autocorrect: false,
-        obscureText: true,
+        obscureText: _passwordObscured,
         focusNode: _passwordFocusNode,
         enableSuggestions: false,
         onFieldSubmitted: (_) =>
@@ -61,6 +64,9 @@ class _SignupFormState extends State<SignupForm> {
         onChanged: (newValue) {
           if (newValue != null) {
             _password = newValue;
+            if (_passwordRepetition != null) {
+              _passwordsMatch = (_password == _passwordRepetition);
+            }
           }
         },
         onSaved: (newValue) {
@@ -76,22 +82,44 @@ class _SignupFormState extends State<SignupForm> {
             ),
             borderRadius: BorderRadius.circular(25.0),
           ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _passwordObscured
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded
+
+            ),
+            tooltip: "Show password",
+            onPressed:() => setState(() {
+              _passwordObscured = !_passwordObscured;
+            }),
+            )
         ),
       );
 
   Widget passwordConfirmationTextField(BuildContext buildContext) => TextFormField(
+        
+
         style: Theme.of(context).textTheme.bodyMedium,
         autocorrect: false,
-        obscureText: true,
+        obscureText: _passwordRepetitionObscured,
         focusNode: _passwordConfirmationFocusNode,
         enableSuggestions: false,
         onFieldSubmitted: (_) {},
         onSaved: (newValue) {},
+        onChanged: (newValue) {
+          if (newValue != null) {
+            _passwordRepetition = newValue;
+            if (_password != null) {
+              _passwordsMatch = (_password == _passwordRepetition);
+            }
+          }
+        },
         validator: (value) {
-          if (value == null) {
+          if (value == null || value.isEmpty) {
             return "Please reenter your Password";
           }
-          if (value != _password || value.isEmpty) {
+          if (value != _password) {
             return "Please enter the same Password as above";
           }
         },
@@ -103,8 +131,21 @@ class _SignupFormState extends State<SignupForm> {
             ),
             borderRadius: BorderRadius.circular(25.0),
           ),
-        ),
-      );
+          suffixIcon: IconButton(
+            icon: Icon(
+              _passwordRepetitionObscured
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded
+
+            ),
+            tooltip: "Show password",
+            onPressed:() => setState(() {
+              _passwordRepetitionObscured = !_passwordRepetitionObscured;
+            }),
+            )
+          )
+
+  );
 
   void _onSignInPressed(BuildContext buildContext) async {
     setState(() {
