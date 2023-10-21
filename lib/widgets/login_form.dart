@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:viscon_hackathon_app/bloc/authentication_service.dart';
 
 class LogInForm extends StatefulWidget {
   const LogInForm({super.key});
@@ -56,7 +57,7 @@ class _LogInFormState extends State<LogInForm> {
         onFieldSubmitted: (_) {},
         onSaved: (newValue) {
           if (newValue != null) {
-            _email = newValue;
+            _password = newValue;
           }
         },
         decoration: InputDecoration(
@@ -70,12 +71,25 @@ class _LogInFormState extends State<LogInForm> {
         ),
       );
 
-  void _onSignInPressed(BuildContext buildContext) /*async*/ {
+  void _onSignInPressed(BuildContext buildContext) async {
     setState(() {
       _isLoading = true;
     });
 
+    _formKey.currentState?.save();
     if (!_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    try {
+      await buildContext
+          .read<AuthenticationService>()
+          .attemptLogIn(_email, _password);
+    } catch (error) {
+      print(error.toString());
       setState(() {
         _isLoading = false;
       });
@@ -85,6 +99,8 @@ class _LogInFormState extends State<LogInForm> {
     setState(() {
       _isLoading = false;
     });
+
+    print("Success!");
   }
 
   @override

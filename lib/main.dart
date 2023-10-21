@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'bloc/theme_service.dart';
+import 'bloc/authentication_service.dart';
 
 import 'screens/home_screen.dart';
 import './route_register.dart';
+import './firebase_options.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -19,6 +26,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<ThemeService>(
           create: (_) => ThemeService(),
+        ),
+        BlocProvider<AuthenticationService>(
+          create: (_) => AuthenticationService(),
         ),
       ],
       child: BlocBuilder<ThemeService, ThemeData>(
