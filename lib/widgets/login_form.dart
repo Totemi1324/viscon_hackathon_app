@@ -19,6 +19,7 @@ class _LogInFormState extends State<LogInForm> {
   bool _isLoading = false;
   String _email = "";
   String _password = "";
+  bool _passwordObscured = true;
 
   Widget emailTextField(BuildContext buildContext) => TextFormField(
         style: Theme.of(context).textTheme.bodyMedium,
@@ -54,7 +55,7 @@ class _LogInFormState extends State<LogInForm> {
   Widget passwordTextField(BuildContext buildContext) => TextFormField(
         style: Theme.of(context).textTheme.bodyMedium,
         autocorrect: false,
-        obscureText: true,
+        obscureText: _passwordObscured,
         focusNode: _passwordFocusNode,
         enableSuggestions: false,
         onFieldSubmitted: (_) {},
@@ -71,6 +72,18 @@ class _LogInFormState extends State<LogInForm> {
             ),
             borderRadius: BorderRadius.circular(25.0),
           ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _passwordObscured
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded
+
+            ),
+            tooltip: "Show password",
+            onPressed:() => setState(() {
+              _passwordObscured = !_passwordObscured;
+            }),
+            )
         ),
       );
 
