@@ -18,7 +18,7 @@ dependencies:
   rive: ^0.9.1
   universal_platform: ^1.0.0+1
   page_transition: ^2.0.9
-  firebase_database: ^10.0.16
+  cloud_firestore: ^4.11.0
   firebase_core: ^2.19.0
   firebase_auth: ^4.11.1
 

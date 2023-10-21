@@ -58,12 +58,11 @@ class AuthenticationService extends Cubit<UserCredentials> {
   }
 
   Future attemptLogIn(String email, String password) async {
-    
-      final credentials = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      _credentials = credentials;
+    final credentials = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    _credentials = credentials;
   }
 
   Future<bool> attemptAutoLogIn() async {
@@ -99,20 +98,18 @@ class AuthenticationService extends Cubit<UserCredentials> {
   Future sendVerificationEmail() async {
     User? user;
     user = _auth.currentUser;
-    if(user != null) {
-       await user.sendEmailVerification();     
+    if (user != null) {
+      await user.sendEmailVerification();
     }
-    
   }
 
   // Neu: Future<bool> isUserConfirmed()
   bool isUserVerified() {
     User? user;
     user = _auth.currentUser;
-    if(user != null) {
+    if (user != null) {
       return user.emailVerified;
     }
     return false;
   }
-
 }
