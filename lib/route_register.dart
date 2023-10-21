@@ -6,7 +6,6 @@ import 'screens/signup_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/verification_screen.dart';
 
-
 class RouteRegister {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -19,6 +18,7 @@ class RouteRegister {
         return MaterialPageRoute(
           builder: (context) => const SignUpScreen(),
           settings: settings,
+        );
       case DashboardScreen.routeName:
         return MaterialPageRoute(
           builder: (context) => const DashboardScreen(),
