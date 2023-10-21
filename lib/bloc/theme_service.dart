@@ -5,17 +5,17 @@ import 'package:flutter_gen/gen/fonts.gen.dart';
 class ThemeService extends Cubit<ThemeData> {
   static final _darkTheme = ThemeData(
     brightness: Brightness.dark,
-    fontFamily: FontFamily.raleway,
+    fontFamily: FontFamily.baloo2,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color.fromRGBO(2, 104, 115, 1.0),
+      seedColor: const Color.fromRGBO(71, 117, 154, 1.0),
       brightness: Brightness.dark,
     ),
   );
   static final _lightTheme = ThemeData(
     brightness: Brightness.light,
-    fontFamily: FontFamily.raleway,
+    fontFamily: FontFamily.baloo2,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color.fromRGBO(2, 104, 115, 1.0),
+      seedColor: const Color.fromRGBO(71, 117, 154, 1.0),
       brightness: Brightness.light,
     ),
   );

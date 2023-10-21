@@ -23,5 +23,5 @@ class DatabaseService extends Cubit<UserData> {
       int preferredGroupSize,
       {String? firstName, String? lastName}) async {}
 
-  Future<List<CourseData>> getCoursesForQuery(String titleQuery) async {}
+  //Future<List<CourseData>> getCoursesForQuery(String titleQuery) async {}
 }

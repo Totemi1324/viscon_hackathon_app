@@ -23,7 +23,7 @@ class _SignupFormState extends State<SignupForm> {
   bool _passwordRepetitionObscured = true;
 
   Widget emailTextField(BuildContext buildContext) => TextFormField(
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.bodyLarge,
         autocorrect: false,
         enableSuggestions: true,
         onFieldSubmitted: (_) =>
@@ -54,7 +54,7 @@ class _SignupFormState extends State<SignupForm> {
       );
 
   Widget passwordTextField(BuildContext buildContext) => TextFormField(
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.bodyLarge,
         autocorrect: false,
         obscureText: _passwordObscured,
         focusNode: _passwordFocusNode,
@@ -90,7 +90,7 @@ class _SignupFormState extends State<SignupForm> {
 
   Widget passwordConfirmationTextField(BuildContext buildContext) =>
       TextFormField(
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyLarge,
           autocorrect: false,
           obscureText: _passwordRepetitionObscured,
           focusNode: _passwordConfirmationFocusNode,
@@ -179,7 +179,7 @@ class _SignupFormState extends State<SignupForm> {
                 children: [
                   Text(
                     "Email address (ending with ethz.ch)",
-                    style: Theme.of(context).textTheme.labelSmall,
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -195,7 +195,7 @@ class _SignupFormState extends State<SignupForm> {
                 children: [
                   Text(
                     "Password",
-                    style: Theme.of(context).textTheme.labelSmall,
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -211,7 +211,7 @@ class _SignupFormState extends State<SignupForm> {
                 children: [
                   Text(
                     "Confirm Password",
-                    style: Theme.of(context).textTheme.labelSmall,
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
