@@ -1,9 +1,7 @@
 import 'dart:ffi';
-import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/group_course_properties.dart';
-
 
 class GroupData {
   Map<String, GroupCourseProperties>? courseProperties;
@@ -27,26 +25,29 @@ class GroupData {
   });
 
   factory GroupData.fromFirestore(DocumentSnapshot docSnap) {
-      Map<String, GroupCourseProperties> coursePreferencesLocal = <String, GroupCourseProperties>{};
-      Map<String, Map> coursePreferencesRaw = docSnap.get('coursePreferences');
+    Map<String, GroupCourseProperties> coursePreferencesLocal =
+        <String, GroupCourseProperties>{};
+    Map<String, Map> coursePreferencesRaw = docSnap.get('coursePreferences');
 
-      coursePreferencesRaw.forEach((key, value) { 
-        coursePreferencesLocal.putIfAbsent(key, () => GroupCourseProperties.fromMap(value));
-      });
+    coursePreferencesRaw.forEach((key, value) {
+      coursePreferencesLocal.putIfAbsent(
+          key, () => GroupCourseProperties.fromMap(value));
+    });
 
-    return GroupData(ownerId: docSnap.get('ownerID'), 
-      title: docSnap.get('title'), 
-      members: docSnap.get('members'), 
+    return GroupData(
+      ownerId: docSnap.get('ownerID'),
+      title: docSnap.get('title'),
+      members: docSnap.get('members'),
       courses: docSnap.get('courses'),
-      studyTime: docSnap.get('studyTime'), 
+      studyTime: docSnap.get('studyTime'),
       courseProperties: coursePreferencesLocal,
       privateDescription: docSnap.get('privateDescription'),
       publicDescription: docSnap.get('publicDescription'),
-      );
+    );
   }
 
   Map<String, dynamic> toFirestore() {
-    return <String, dynamic> {
+    return <String, dynamic>{
       'ownerId': ownerId,
       'title': title,
       'members': members,
