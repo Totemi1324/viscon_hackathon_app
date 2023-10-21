@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:viscon_hackathon_app/models/learning_method.dart';
 
 import './toggle_button.dart';
+import './group_card.dart';
 
 class JoinGroupView extends StatelessWidget {
   JoinGroupView({super.key});
@@ -64,62 +66,45 @@ class JoinGroupView extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          child: Text("AS"),
+        Expanded(
+          child: ShaderMask(
+            shaderCallback: (bounds) {
+              return const LinearGradient(
+                colors: [
+                  Colors.white,
+                  Colors.transparent,
+                ],
+                stops: [0.9, 1],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                tileMode: TileMode.mirror,
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.dstIn,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: 10,
+              itemBuilder: (context, index) => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+                child: GroupCard(
+                  title: "study-moon-werewolves",
+                  description:
+                      "Wir sind eine mega coole study group mit lauter netten Leuten und freuen uns auf deine Anfrage!",
+                  matchScore: 0.87,
+                  courseTitles: [
+                    "Algorithmen & Datenstrukturen",
+                    "Lineare Algebra",
+                  ],
+                  learningMethods: [
+                    LearningMethod.workTogether,
+                    LearningMethod.recapLecture,
+                  ],
+                ),
+              ),
+            ),
+          ),
         )
       ],
     );
-
-    /*return Column(
-      children: [
-        SizedBox(
-          height: 100,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Select courses:",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              ListView(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: [
-                  Container(
-                    width: 160,
-                    color: Colors.red,
-                  ),
-                  Container(
-                    width: 160,
-                    color: Colors.blue,
-                  ),
-                  Container(
-                    width: 160,
-                    color: Colors.green,
-                  ),
-                  Container(
-                    width: 160,
-                    color: Colors.yellow,
-                  ),
-                  Container(
-                    width: 160,
-                    color: Colors.orange,
-                  ),
-                ],
-              ),
-              Container(
-                color: Colors.green,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Start search!"),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container()
-      ],
-    );*/
   }
 }
