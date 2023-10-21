@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:viscon_hackathon_app/screens/base/flat.dart';
 
 import 'login_screen.dart';
+import 'signup_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = "home";
@@ -17,8 +18,9 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () {},
-                child: const Text("Register"),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(SignUpScreen.routeName),
+                child: const Text("Sign up"),
               ),
               Container(
                 height: 50,
