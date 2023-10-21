@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:viscon_hackathon_app/bloc/authentication_service.dart';
+
+import '../bloc/authentication_service.dart';
+import '../screens/dashboard_screen.dart';
+import '../screens/verification_screen.dart';
 
 class LogInForm extends StatefulWidget {
   const LogInForm({super.key});
@@ -84,10 +87,19 @@ class _LogInFormState extends State<LogInForm> {
       return;
     }
 
+    final authService = buildContext.read<AuthenticationService>();
+    final navigator = Navigator.of(buildContext);
+
     try {
-      await buildContext
-          .read<AuthenticationService>()
-          .attemptLogIn(_email, _password);
+      await authService.attemptLogIn(_email, _password);
+
+      final verified = authService.isUserVerified();
+      if (verified) {
+        navigator.pushNamedAndRemoveUntil(
+            DashboardScreen.routeName, (_) => false);
+      } else {
+        navigator.pushNamed(VerificationScreen.routeName);
+      }
     } catch (error) {
       print(error.toString());
       setState(() {
