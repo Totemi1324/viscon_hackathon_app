@@ -35,9 +35,12 @@ class _WithTabBarState extends State<WithTabBar>
   }
 
   Widget withSpacing(Widget body) => Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 700),
-          child: body,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700),
+            child: body,
+          ),
         ),
       );
 
@@ -49,42 +52,79 @@ class _WithTabBarState extends State<WithTabBar>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 32,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Container(
-              height: 45,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(
-                  25.0,
-                ),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                // give the indicator a decoration (color and border radius)
-                indicator: BoxDecoration(
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1100),
+              child: Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(
                     25.0,
                   ),
-                  color: Theme.of(context).colorScheme.primary,
                 ),
-                labelColor: Theme.of(context).colorScheme.onPrimary,
-                unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
-                tabs: const [
-                  Tab(
-                    text: 'My study groups',
+                child: TabBar(
+                  controller: _tabController,
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      25.0,
+                    ),
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(
+                      width: 3,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 0,
+                        color: Theme.of(context).colorScheme.primary,
+                        offset: const Offset(4, 4),
+                      )
+                    ],
                   ),
-                  Tab(
-                    text: 'Join group',
-                  ),
-                  Tab(
-                    text: 'Create group',
-                  ),
-                ],
+                  labelColor: Theme.of(context).colorScheme.onSurface,
+                  unselectedLabelColor:
+                      Theme.of(context).colorScheme.onSurfaceVariant,
+                  tabs: const [
+                    Tab(
+                      child: Text(
+                        "My study groups",
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "Join group",
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "Create group",
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
