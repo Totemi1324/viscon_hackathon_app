@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:viscon_hackathon_app/models/learning_method.dart';
 
+import '../models/learning_method.dart';
 import './toggle_button.dart';
 import './group_card.dart';
 

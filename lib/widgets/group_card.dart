@@ -7,14 +7,14 @@ import './capsule_element.dart';
 class GroupCard extends StatelessWidget {
   final String title;
   final String description;
-  final double matchScore;
+  final double? matchScore;
   final List<String> courseTitles;
   final List<LearningMethod> learningMethods;
 
   const GroupCard({
     required this.title,
     required this.description,
-    required this.matchScore,
+    this.matchScore,
     required this.courseTitles,
     required this.learningMethods,
     super.key,
@@ -122,28 +122,30 @@ class GroupCard extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  Text(
-                    matchScore == 1 ? "Best" : "Match score",
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        color: const Color.fromRGBO(132, 156, 34, 1.0),
-                        fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    matchScore == 1
-                        ? "Match"
-                        : NumberFormat.percentPattern().format(matchScore),
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                          color: const Color.fromRGBO(132, 156, 34, 1.0),
-                          fontWeight: FontWeight.w800,
-                        ),
-                  ),
-                ],
+            if (matchScore != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    Text(
+                      matchScore == 1 ? "Best" : "Match score",
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          color: const Color.fromRGBO(66, 156, 34, 1.0),
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      matchScore == 1
+                          ? "Match"
+                          : NumberFormat.percentPattern().format(matchScore),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                color: const Color.fromRGBO(66, 156, 34, 1.0),
+                                fontWeight: FontWeight.w800,
+                              ),
+                    ),
+                  ],
+                ),
               ),
-            ),
             Icon(
               Icons.navigate_next_rounded,
               size: 50,
