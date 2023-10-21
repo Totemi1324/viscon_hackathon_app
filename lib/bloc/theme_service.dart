@@ -20,9 +20,9 @@ class ThemeService extends Cubit<ThemeData> {
     ),
   );
 
-  ThemeService() : super(_darkTheme);
+  ThemeService() : super(_lightTheme);
 
-  static ThemeData currentTheme = _darkTheme;
+  static ThemeData currentTheme = _lightTheme;
 
   void selectTheme(Brightness selectedBrightness) {
     if (selectedBrightness == Brightness.dark) {
