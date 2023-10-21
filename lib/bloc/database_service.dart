@@ -57,17 +57,18 @@ class DatabaseService extends Cubit<UserData> {
   Future<List<CourseData>> getCoursesForQuery(String courseId) async {
     final coursesRef = _database.collection("courses");
     List<CourseData> result = [];
-    coursesRef.where("id", isEqualTo: "courseId").get().then(
-      (QuerySnapshot querySnapshot) {
-        for (var docSnapshot in querySnapshot.docs) {
-          //read out data
-          result.add(CourseData.fromFirestore(docSnapshot));
-        }
-      },
-      onError: (e) {
-        return [];
-      },
-    );
+
+    try {
+      final candidates =
+          await coursesRef.where("id", isEqualTo: courseId).get();
+
+      for (var docSnapshot in candidates.docs) {
+        //read out data
+        result.add(CourseData.fromFirestore(docSnapshot));
+      }
+    } catch (e) {
+      return [];
+    }
 
     return result;
   }

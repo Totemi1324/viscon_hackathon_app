@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuple/tuple.dart';
+import '../bloc/database_service.dart';
 
 import '../models/course_data.dart';
 
@@ -14,24 +16,8 @@ class CourseSearch extends StatefulWidget {
 
 class _CourseSearchState extends State<CourseSearch> {
   String _searchQuery = "";
-  List<CourseData> _currentResults = [
-    CourseData(
-      id: "101-5014-50L",
-      lecturers: [
-        Tuple3("Bernd", "Gärtner", "Prof. Dr."),
-        Tuple3("Alfonso", "Bandeira", ""),
-      ],
-      title: "Lineare Algebra",
-    ),
-    CourseData(
-      id: "052-0511-23L",
-      lecturers: [
-        Tuple3("Tom", "Guthknecht", "Dr."),
-      ],
-      title:
-          "Planning Strategies for Complex Buildings Using the Example of Health Facilities",
-    ),
-  ];
+  List<CourseData> _currentResults = [];
+  final _formKey = GlobalKey<FormState>();
 
   String generateLecturerString(List<Tuple3> lecturerData) {
     String res = "";
@@ -45,8 +31,11 @@ class _CourseSearchState extends State<CourseSearch> {
     return res;
   }
 
-  void performSearch(String query) {
-    print("e");
+  void performSearch(String query, BuildContext buildContext) async {
+    final dbService = buildContext.read<DatabaseService>();
+    _currentResults = await dbService.getCoursesForQuery(query);
+
+    print(_currentResults.length);
   }
 
   @override
@@ -54,31 +43,39 @@ class _CourseSearchState extends State<CourseSearch> {
     return Column(
       children: [
         Text("Please enter your course ID:"),
-        TextFormField(
-          style: Theme.of(context).textTheme.bodyLarge,
-          autocorrect: false,
-          enableSuggestions: false,
-          onFieldSubmitted: (value) => performSearch(value),
-          onSaved: (newValue) {
-            if (newValue != null) {
-              _searchQuery = newValue;
-            }
-          },
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 3,
-                color: Theme.of(context).colorScheme.onSurface,
+        Form(
+          key: _formKey,
+          child: TextFormField(
+            style: Theme.of(context).textTheme.bodyLarge,
+            autocorrect: false,
+            enableSuggestions: false,
+            onFieldSubmitted: (value) {
+              performSearch(value, context);
+            },
+            onSaved: (newValue) {
+              if (newValue != null) {
+                _searchQuery = newValue;
+              }
+            },
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 3,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                Icons.search_rounded,
-                color: Theme.of(context).colorScheme.primary,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  Icons.search_rounded,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                tooltip: "Search course ID",
+                onPressed: () {
+                  _formKey.currentState?.save();
+                  performSearch(_searchQuery, context);
+                },
               ),
-              tooltip: "Search course ID",
-              onPressed: () => performSearch(_searchQuery),
             ),
           ),
         ),
@@ -114,11 +111,11 @@ class _CourseSearchState extends State<CourseSearch> {
                           color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w600),
                     ),
-                    Text(
+                    /*Text(
                       generateLecturerString(result.lecturers),
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: Theme.of(context).colorScheme.onSurface),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
