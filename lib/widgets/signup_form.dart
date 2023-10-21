@@ -17,8 +17,6 @@ class _SignupFormState extends State<SignupForm> {
   bool _isLoading = false;
   String _email = "";
   String _password = "";
-  String _passwordRepetition = "";
-  bool _passwordsMatch = false;
   bool _passwordObscured = true;
   bool _passwordRepetitionObscured = true;
 
@@ -60,14 +58,9 @@ class _SignupFormState extends State<SignupForm> {
         focusNode: _passwordFocusNode,
         enableSuggestions: false,
         onFieldSubmitted: (_) =>
-                    FocusScope.of(context).requestFocus(_passwordConfirmationFocusNode),
+            FocusScope.of(context).requestFocus(_passwordConfirmationFocusNode),
         onChanged: (newValue) {
-          if (newValue != null) {
-            _password = newValue;
-            if (_passwordRepetition != null) {
-              _passwordsMatch = (_password == _passwordRepetition);
-            }
-          }
+          _password = newValue;
         },
         onSaved: (newValue) {
           if (newValue != null) {
@@ -75,77 +68,59 @@ class _SignupFormState extends State<SignupForm> {
           }
         },
         decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 3,
-              color: Theme.of(context).colorScheme.onSurface,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 3,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              borderRadius: BorderRadius.circular(25.0),
             ),
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _passwordObscured
-                ? Icons.visibility_rounded
-                : Icons.visibility_off_rounded
-
-            ),
-            tooltip: "Show password",
-            onPressed:() => setState(() {
-              _passwordObscured = !_passwordObscured;
-            }),
-            )
-        ),
+            suffixIcon: IconButton(
+              icon: Icon(_passwordObscured
+                  ? Icons.visibility_rounded
+                  : Icons.visibility_off_rounded),
+              tooltip: "Show password",
+              onPressed: () => setState(() {
+                _passwordObscured = !_passwordObscured;
+              }),
+            )),
       );
 
-  Widget passwordConfirmationTextField(BuildContext buildContext) => TextFormField(
-        
-
-        style: Theme.of(context).textTheme.bodyMedium,
-        autocorrect: false,
-        obscureText: _passwordRepetitionObscured,
-        focusNode: _passwordConfirmationFocusNode,
-        enableSuggestions: false,
-        onFieldSubmitted: (_) {},
-        onSaved: (newValue) {},
-        onChanged: (newValue) {
-          if (newValue != null) {
-            _passwordRepetition = newValue;
-            if (_password != null) {
-              _passwordsMatch = (_password == _passwordRepetition);
+  Widget passwordConfirmationTextField(BuildContext buildContext) =>
+      TextFormField(
+          style: Theme.of(context).textTheme.bodyMedium,
+          autocorrect: false,
+          obscureText: _passwordRepetitionObscured,
+          focusNode: _passwordConfirmationFocusNode,
+          enableSuggestions: false,
+          onFieldSubmitted: (_) {},
+          onSaved: (newValue) {},
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Please reenter your Password";
             }
-          }
-        },
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Please reenter your Password";
-          }
-          if (value != _password) {
-            return "Please enter the same Password as above";
-          }
-        },
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 3,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _passwordRepetitionObscured
-                ? Icons.visibility_rounded
-                : Icons.visibility_off_rounded
-
-            ),
-            tooltip: "Show password",
-            onPressed:() => setState(() {
-              _passwordRepetitionObscured = !_passwordRepetitionObscured;
-            }),
-            )
-          )
-
-  );
+            if (value != _password) {
+              return "Please enter the same Password as above";
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 3,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(_passwordRepetitionObscured
+                    ? Icons.visibility_rounded
+                    : Icons.visibility_off_rounded),
+                tooltip: "Show password",
+                onPressed: () => setState(() {
+                  _passwordRepetitionObscured = !_passwordRepetitionObscured;
+                }),
+              )));
 
   void _onSignInPressed(BuildContext buildContext) async {
     setState(() {
