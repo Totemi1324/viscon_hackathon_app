@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:viscon_hackathon_app/bloc/authentication_service.dart';
+
+import '../bloc/authentication_service.dart';
+import '../screens/verification_screen.dart';
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
@@ -135,10 +137,15 @@ class _SignupFormState extends State<SignupForm> {
       return;
     }
 
+    final authService = buildContext.read<AuthenticationService>();
+    final navigator = Navigator.of(buildContext);
+
     try {
-      await buildContext
-          .read<AuthenticationService>()
-          .attemptSignUp(_email.trim(), _password);
+      await authService.attemptSignUp(_email.trim(), _password);
+
+      await authService.sendVerificationEmail();
+      navigator.pushNamedAndRemoveUntil(
+          VerificationScreen.routeName, (_) => false);
     } catch (error) {
       print(error.toString());
       setState(() {
