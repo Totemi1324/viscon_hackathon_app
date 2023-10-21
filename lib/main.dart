@@ -8,6 +8,7 @@ import 'bloc/authentication_service.dart';
 import 'screens/home_screen.dart';
 import './route_register.dart';
 import './firebase_options.dart';
+import './scroll_behavior.dart';
 
 void main() async {
   await Firebase.initializeApp(
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: "NerdHerd",
           theme: activeTheme,
+          scrollBehavior: NerdHerdScrollBehavior(),
           initialRoute: HomeScreen.routeName,
           routes: {
             HomeScreen.routeName: (context) => const HomeScreen(),

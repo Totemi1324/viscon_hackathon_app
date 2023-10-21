@@ -30,7 +30,7 @@ class SignUpScreen extends StatelessWidget {
                   margin: const EdgeInsets.only(top: 20),
                   child: Text(
                     "with your ETH email",
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
                 Container(
