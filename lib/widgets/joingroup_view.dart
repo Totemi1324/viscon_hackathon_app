@@ -9,7 +9,7 @@ class JoinGroupView extends StatelessWidget {
 
   final Set<String> selectedCourses = {};
 
-  Widget listView(List<String> courseTitles) => SizedBox(
+  Widget courseFilters(List<String> courseTitles) => SizedBox(
         height: 60,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -50,7 +50,7 @@ class JoinGroupView extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: listView([
+                child: courseFilters([
                   "Algorithmen & Datenstrukturen",
                   "Diskrete Mathematik",
                   "Einführung in die Programmierung"
