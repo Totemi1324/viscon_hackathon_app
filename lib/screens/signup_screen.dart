@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import './base/flat.dart';
+import 'package:viscon_hackathon_app/screens/base/flat.dart';
 
-import '../widgets/login_form.dart';
+import '../widgets/signup_form.dart';
 
-class LogInScreen extends StatelessWidget {
-  static const routeName = "log-in";
+class SignUpScreen extends StatelessWidget {
+  static const routeName = "sign-up";
 
-  const LogInScreen({super.key});
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class LogInScreen extends StatelessWidget {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Log in",
+                    "Sign up",
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
@@ -35,7 +35,7 @@ class LogInScreen extends StatelessWidget {
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 50),
-                  child: const LogInForm(),
+                  child: const SignupForm(),
                 ),
               ],
             ),

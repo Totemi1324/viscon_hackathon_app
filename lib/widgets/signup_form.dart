@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/authentication_service.dart';
-import '../screens/dashboard_screen.dart';
 import '../screens/verification_screen.dart';
 
-class LogInForm extends StatefulWidget {
-  const LogInForm({super.key});
+class SignupForm extends StatefulWidget {
+  const SignupForm({super.key});
 
   @override
-  State<LogInForm> createState() => _LogInFormState();
+  State<SignupForm> createState() => _SignupFormState();
 }
 
-class _LogInFormState extends State<LogInForm> {
+class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
   final _passwordFocusNode = FocusNode();
+  final _passwordConfirmationFocusNode = FocusNode();
 
   bool _isLoading = false;
   String _email = "";
   String _password = "";
   bool _passwordObscured = true;
+  bool _passwordRepetitionObscured = true;
 
   Widget emailTextField(BuildContext buildContext) => TextFormField(
         style: Theme.of(context).textTheme.bodyMedium,
@@ -58,7 +59,11 @@ class _LogInFormState extends State<LogInForm> {
         obscureText: _passwordObscured,
         focusNode: _passwordFocusNode,
         enableSuggestions: false,
-        onFieldSubmitted: (_) {},
+        onFieldSubmitted: (_) =>
+            FocusScope.of(context).requestFocus(_passwordConfirmationFocusNode),
+        onChanged: (newValue) {
+          _password = newValue;
+        },
         onSaved: (newValue) {
           if (newValue != null) {
             _password = newValue;
@@ -83,6 +88,42 @@ class _LogInFormState extends State<LogInForm> {
             )),
       );
 
+  Widget passwordConfirmationTextField(BuildContext buildContext) =>
+      TextFormField(
+          style: Theme.of(context).textTheme.bodyMedium,
+          autocorrect: false,
+          obscureText: _passwordRepetitionObscured,
+          focusNode: _passwordConfirmationFocusNode,
+          enableSuggestions: false,
+          onFieldSubmitted: (_) {},
+          onSaved: (newValue) {},
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Please reenter your Password";
+            }
+            if (value != _password) {
+              return "Please enter the same Password as above";
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 3,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(_passwordRepetitionObscured
+                    ? Icons.visibility_rounded
+                    : Icons.visibility_off_rounded),
+                tooltip: "Show password",
+                onPressed: () => setState(() {
+                  _passwordRepetitionObscured = !_passwordRepetitionObscured;
+                }),
+              )));
+
   void _onSignInPressed(BuildContext buildContext) async {
     setState(() {
       _isLoading = true;
@@ -100,15 +141,11 @@ class _LogInFormState extends State<LogInForm> {
     final navigator = Navigator.of(buildContext);
 
     try {
-      await authService.attemptLogIn(_email.trim(), _password);
+      await authService.attemptSignUp(_email.trim(), _password);
 
-      final verified = authService.isUserVerified();
-      if (verified) {
-        navigator.pushNamedAndRemoveUntil(
-            DashboardScreen.routeName, (_) => false);
-      } else {
-        navigator.pushNamed(VerificationScreen.routeName);
-      }
+      await authService.sendVerificationEmail();
+      navigator.pushNamedAndRemoveUntil(
+          VerificationScreen.routeName, (_) => false);
     } catch (error) {
       print(error.toString());
       setState(() {
@@ -167,6 +204,22 @@ class _LogInFormState extends State<LogInForm> {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Confirm Password",
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: passwordConfirmationTextField(context),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(
               height: 50,
             ),
@@ -174,7 +227,7 @@ class _LogInFormState extends State<LogInForm> {
               onPressed: _isLoading ? null : () => _onSignInPressed(context),
               child: _isLoading
                   ? const Text("Please wait...")
-                  : const Text("Log in"),
+                  : const Text("Sign up"),
             ),
           ],
         ),
