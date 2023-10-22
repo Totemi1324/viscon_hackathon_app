@@ -9,6 +9,11 @@ class GroupCourseProperties {
     this.learnMethods,
   });
 
+  factory GroupCourseProperties.defaultProps() => GroupCourseProperties(courseSkilLevel: 2,
+      homogenes: false,
+      learnMethods: [false, false, false, false, false],
+      );
+
   factory GroupCourseProperties.fromMap(Map<dynamic, dynamic> map) {
     return GroupCourseProperties(courseSkilLevel: map["couresSkilLevel"],
       homogenes: map["homogenes"],
