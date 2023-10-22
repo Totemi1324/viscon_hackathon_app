@@ -5,6 +5,7 @@ import '../bloc/functions_service.dart';
 import '../bloc/authentication_service.dart';
 import '../bloc/database_service.dart';
 
+import '../models/group_course_properties.dart';
 import '../models/learning_method.dart';
 import './toggle_button.dart';
 import './group_card.dart';
@@ -62,6 +63,16 @@ class _JoinGroupViewState extends State<JoinGroupView> {
         ),
       );
 
+  List<LearningMethod> learningMethodsCumulated(
+      Map<String, GroupCourseProperties>? data) {
+    if (data == null) {
+      return [];
+    }
+    List<LearningMethod> result = [];
+
+    for (var course in data.values) {}
+  }
+
   Future _startMatching(BuildContext buildContext) async {
     _matchedGroups.clear();
     final userId = buildContext.read<AuthenticationService>().state.userId;
@@ -72,11 +83,23 @@ class _JoinGroupViewState extends State<JoinGroupView> {
     for (var dataPoint in rawDataPoints) {
       final groupData = await dbService.getGroup(dataPoint.groupId);
       if (groupData != null) {
-        _matchedGroups.add(GroupCard(
+        List<String> coursesNames = [];
+        if (groupData.courses != null) {
+          for (var id in groupData.courses!) {
+            coursesNames.add(id);
+          }
+        }
+
+        _matchedGroups.add(
+          GroupCard(
             title: groupData.title,
+            matchScore: dataPoint.matchScore,
             description: groupData.publicDescription ?? "",
-            courseTitles: groupData.courses ?? [],
-            learningMethods: []));
+            courseTitles: coursesNames,
+            learningMethods:
+                learningMethodsCumulated(groupData.courseProperties),
+          ),
+        );
       }
     }
 
@@ -109,8 +132,24 @@ class _JoinGroupViewState extends State<JoinGroupView> {
               width: 30,
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.titleMedium,
+                padding: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                elevation: 0,
+              ),
               onPressed: () async => await _startMatching(context),
-              child: const Text("Start search!"),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.search_rounded,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  const Text("Start search!"),
+                ],
+              ),
             ),
           ],
         ),

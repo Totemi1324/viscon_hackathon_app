@@ -97,8 +97,10 @@ class DatabaseService extends Cubit<UserData> {
     List<CourseData> result = [];
 
     try {
-      final candidates =
-          await coursesRef.where("id", isEqualTo: courseId).get();
+      final candidates = await coursesRef
+          .where("id", isGreaterThanOrEqualTo: courseId)
+          .where("id", isLessThanOrEqualTo: courseId + "\uf8ff")
+          .get();
       for (var docSnapshot in candidates.docs) {
         //read out data
         result.add(CourseData.fromFirestore(docSnapshot));
