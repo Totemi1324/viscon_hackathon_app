@@ -33,3 +33,4 @@ macos/
 windows/
 
 firebase_options.dart
+.firebase/
