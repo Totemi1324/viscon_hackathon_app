@@ -192,4 +192,21 @@ class DatabaseService extends Cubit<UserData> {
       return null;
     }
   }
+
+  Future addUserToGroup(String userId, String groupId) async {
+    try {
+      final groupRef = await _database.collection('groups').doc(groupId);
+      final userRef = await _database.collection('users').doc(userId);
+      final members = ((await groupRef.get()).get('members') as List<dynamic>).cast<String>();
+      final groups = ((await userRef.get()).get('groups') as List<dynamic>).cast<String>();
+      members.add(userId);
+      groups.add(groupId);
+      groupRef.update({'members' : members});
+      userRef.update({'groups' : groups});
+    } catch (e) {
+      return;
+    }
+  }
+
+  
 }
