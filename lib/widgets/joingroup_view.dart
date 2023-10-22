@@ -68,9 +68,19 @@ class _JoinGroupViewState extends State<JoinGroupView> {
     if (data == null) {
       return [];
     }
-    List<LearningMethod> result = [];
+    Set<LearningMethod> result = {};
 
-    for (var course in data.values) {}
+    for (var course in data.values) {
+      if (course.learnMethods != null) {
+        for (var element in course.learnMethods!.entries) {
+          if (element.value > 0) {
+            result.add(fromString(element.key));
+          }
+        }
+      }
+    }
+
+    return result.toList();
   }
 
   Future _startMatching(BuildContext buildContext) async {
@@ -86,7 +96,10 @@ class _JoinGroupViewState extends State<JoinGroupView> {
         List<String> coursesNames = [];
         if (groupData.courses != null) {
           for (var id in groupData.courses!) {
-            coursesNames.add(id);
+            final courseName = await dbService.getCourseTitle(id);
+            if (courseName != null) {
+              coursesNames.add(courseName);
+            }
           }
         }
 

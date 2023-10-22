@@ -24,33 +24,18 @@ class GroupCard extends StatelessWidget {
           List<String> courseTitles, BuildContext buildContext) =>
       SizedBox(
         height: 30,
-        child: ShaderMask(
-          shaderCallback: (bounds) {
-            return const LinearGradient(
-              colors: [
-                Colors.white,
-                Colors.transparent,
-              ],
-              stops: [0.9, 1],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              tileMode: TileMode.mirror,
-            ).createShader(bounds);
-          },
-          blendMode: BlendMode.dstIn,
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemCount: courseTitles.length,
-            itemBuilder: (context, index) => Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: CapsuleElement(courseTitles[index],
-                    color: Theme.of(buildContext).colorScheme.tertiary,
-                    textColor: Theme.of(buildContext).colorScheme.onTertiary),
-              ),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemCount: courseTitles.length,
+          itemBuilder: (context, index) => Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CapsuleElement(courseTitles[index],
+                  color: Theme.of(buildContext).colorScheme.tertiary,
+                  textColor: Theme.of(buildContext).colorScheme.onTertiary),
             ),
           ),
         ),
