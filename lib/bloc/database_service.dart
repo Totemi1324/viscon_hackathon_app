@@ -92,6 +92,20 @@ class DatabaseService extends Cubit<UserData> {
     }
   }
 
+  Future addCourseToUser(String userId, String courseId) async {
+    createNewUserCoursePreferences(userId, courseId);
+    final courses =( (await getDocRefFromUserId(userId).get()).get('courses') as List<dynamic>).cast<String>();
+    courses.add(courseId);
+    getDocRefFromUserId(userId).update({"courses" : courses});
+  }
+
+  Future removeCourseFromUser(String userId, String courseId) async {
+    createNewUserCoursePreferences(userId, courseId);
+    final courses =( (await getDocRefFromUserId(userId).get()).get('courses') as List<dynamic>).cast<String>();
+    courses.remove(courseId);
+    getDocRefFromUserId(userId).update({"courses" : courses});
+  }
+
   Future<List<CourseData>> getCoursesForQuery(String courseId) async {
     final coursesRef = _database.collection("courses");
     List<CourseData> result = [];
