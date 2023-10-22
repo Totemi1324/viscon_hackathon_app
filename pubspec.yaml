@@ -27,12 +27,19 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  flutter_launcher_icons: ^0.12.0
+  flutter_launcher_icons: ^0.13.1
   build_runner:
   flutter_gen_runner:
 
 flutter_gen:
   output: .dart_tool/flutter_gen/gen/
+
+flutter_launcher_icons:
+  web:
+    generate: true
+    image_path: "assets/images/icon.png"
+    background_color: "#333333"
+    theme_color: "#47759A"
 
 # The following section is specific to Flutter packages.
 flutter:
