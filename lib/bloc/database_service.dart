@@ -199,12 +199,16 @@ class DatabaseService extends Cubit<UserData> {
     try {
       final groupRef = _database.collection('groups').doc(groupId);
       final userRef = _database.collection('users').doc(userId);
-      final members = ((await groupRef.get()).get('members') as List<dynamic>).cast<String>();
-      final groups = ((await userRef.get()).get('groups') as List<dynamic>).cast<String>();
-      members.add(userId);
-      groups.add(groupId);
-      groupRef.update({'members' : members});
-      userRef.update({'groups' : groups});
+      final docSnapGroup = await groupRef.get();
+      final docSnapUser = await userRef.get();
+      if (docSnapGroup.exists && docSnapUser.exists) {
+        final members = (docSnapGroup.get('members') as List<dynamic>).cast<String>();
+        final groups = (docSnapUser.get('groups') as List<dynamic>).cast<String>();
+        members.add(userId);
+        groups.add(groupId);
+        groupRef.update({'members' : members});
+        userRef.update({'groups' : groups});
+      }
     } catch (e) {
       return;
     }
@@ -214,12 +218,16 @@ class DatabaseService extends Cubit<UserData> {
     try {
       final groupRef = _database.collection('groups').doc(groupId);
       final userRef = _database.collection('users').doc(userId);
-      final members = ((await groupRef.get()).get('members') as List<dynamic>).cast<String>();
-      final groups = ((await userRef.get()).get('groups') as List<dynamic>).cast<String>();
-      members.remove(userId);
-      groups.remove(groupId);
-      groupRef.update({'members' : members});
-      userRef.update({'groups' : groups});
+      final docSnapGroup = await groupRef.get();
+      final docSnapUser = await userRef.get();
+      if (docSnapGroup.exists && docSnapUser.exists) {
+        final members = (docSnapGroup.get('members') as List<dynamic>).cast<String>();
+        final groups = (docSnapUser.get('groups') as List<dynamic>).cast<String>();
+        members.remove(userId);
+        groups.remove(groupId);
+        groupRef.update({'members' : members});
+        userRef.update({'groups' : groups});
+      }
     } catch (e) {
       return;
     }
