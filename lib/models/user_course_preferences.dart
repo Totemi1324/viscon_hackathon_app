@@ -13,8 +13,8 @@ class UserCoursePreferences {
     required this.learnMethods,
   });
 
-  factory UserCoursePreferences.defaultPrefs() => UserCoursePreferences(
-        courseId: "",
+  factory UserCoursePreferences.defaultPrefs(String courseId) => UserCoursePreferences(
+        courseId: courseId,
         courseSkilLevel: 1,
         homogenes: false,
         learnMethods: [false, false, false, false, false,],

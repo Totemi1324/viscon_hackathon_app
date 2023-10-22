@@ -29,7 +29,44 @@ class DatabaseService extends Cubit<UserData> {
       }
   }
 
-  Future createNewGroup(String )
+  Future createNewGroup(String groupId, String ownerId, String title, List<String> courses, 
+    String privateDescription, String publicDescription, {List<bool>? studyTime}) async {
+
+    final newGroupRef = _database.collection('groups').doc(groupId);
+
+    final coursePreferences = <String, GroupCourseProperties> {};
+
+    for (var course in courses) {
+      coursePreferences.putIfAbsent(course, GroupCourseProperties.defaultProps());\
+    }
+
+    final groupData = GroupData(ownerId: ownerId, 
+      title: title,
+      members: [ownerId],
+      courses: courses,
+      privateDescription: privateDescription,
+      publicDescription: publicDescription,
+      studyTime: studyTime,
+      courseProperties: coursePreferences,
+      );
+      try {
+        newGroupRef.set(group_data.toFirestore());
+      }
+      catch (e) {
+        return;
+      }
+  }
+
+  Future createNewUserCoursePreferences(String userId, String courseId) async {
+    final newPrefRef = _database.collection("userCoursePreferences").doc(getUserCoursePreferenceId(userId, courseId));
+    final prefData = UserCoursePreferences.defaultPrefs(courseId);
+    try {
+      newPrefRef.set(prefData.toFirestore());
+    }
+    catch (e) {
+      return;
+    }
+  }
 
   Future updateUserData(
       String userId, List<String> courses, int groupSize, List<String> groups,
@@ -116,6 +153,8 @@ class DatabaseService extends Cubit<UserData> {
       return null;
     }
   }
+
+  
 
   String getUserCoursePreferenceId(String userId, String courseId) {
     return userId + "-" + courseId;
