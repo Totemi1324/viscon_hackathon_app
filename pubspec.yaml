@@ -18,7 +18,8 @@ dependencies:
   rive: ^0.9.1
   universal_platform: ^1.0.0+1
   page_transition: ^2.0.9
-  firebase_database: ^10.0.16
+  cloud_firestore: ^4.11.0
+  cloud_functions: ^4.5.1
   firebase_core: ^2.19.0
   firebase_auth: ^4.11.1
 
@@ -26,12 +27,19 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  flutter_launcher_icons: ^0.12.0
+  flutter_launcher_icons: ^0.13.1
   build_runner:
   flutter_gen_runner:
 
 flutter_gen:
   output: .dart_tool/flutter_gen/gen/
+
+flutter_launcher_icons:
+  web:
+    generate: true
+    image_path: "assets/images/icon.png"
+    background_color: "#333333"
+    theme_color: "#47759A"
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -50,3 +58,14 @@ flutter:
           weight: 700
         - asset: assets/fonts/Raleway-Light.ttf
           weight: 300
+    - family: Baloo2
+      fonts:
+        - asset: assets/fonts/Baloo2-Regular.ttf
+        - asset: assets/fonts/Baloo2-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Baloo2-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Baloo2-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Baloo2-ExtraBold.ttf
+          weight: 800

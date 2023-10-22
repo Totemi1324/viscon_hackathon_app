@@ -50,12 +50,27 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 ),
                 if (!_sent)
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.titleMedium,
+                      padding: const EdgeInsets.all(20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      elevation: 0,
+                    ),
                     onPressed: () => _onSendConfirmationPressed(context),
                     child: const Text("Resend verification email"),
                   ),
                 if (_sent) const Text("Verification email sent!"),
                 if (!Navigator.canPop(context))
-                  ElevatedButton(
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.titleMedium,
+                      padding: const EdgeInsets.all(20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
                     onPressed: () => Navigator.of(context)
                         .pushNamedAndRemoveUntil(
                             LogInScreen.routeName, (route) => false),

@@ -4,10 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'bloc/theme_service.dart';
 import 'bloc/authentication_service.dart';
+import 'bloc/database_service.dart';
+import 'bloc/functions_service.dart';
 
 import 'screens/home_screen.dart';
 import './route_register.dart';
 import './firebase_options.dart';
+import './scroll_behavior.dart';
 
 void main() async {
   await Firebase.initializeApp(
@@ -30,12 +33,19 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthenticationService>(
           create: (_) => AuthenticationService(),
         ),
+        BlocProvider<DatabaseService>(
+          create: (_) => DatabaseService(),
+        ),
+        BlocProvider<FunctionsService>(
+          create: (_) => FunctionsService(),
+        ),
       ],
       child: BlocBuilder<ThemeService, ThemeData>(
         builder: (context, activeTheme) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "NerdHerd",
           theme: activeTheme,
+          scrollBehavior: NerdHerdScrollBehavior(),
           initialRoute: HomeScreen.routeName,
           routes: {
             HomeScreen.routeName: (context) => const HomeScreen(),
