@@ -18,11 +18,11 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WithTabBar(
+    return const WithTabBar(
       title: "NerdHerd",
-      myStudyGroupsBody: const MyStudyGroupsView(),
+      myStudyGroupsBody: MyStudyGroupsView(),
       joinGroupBody: JoinGroupView(),
-      createGroupBody: const CreateGroupView(),
+      createGroupBody: CreateGroupView(),
     );
   }
 }

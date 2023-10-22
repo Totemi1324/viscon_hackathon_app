@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/functions_service.dart';
+import '../bloc/authentication_service.dart';
 
 import '../models/learning_method.dart';
 import './toggle_button.dart';
 import './group_card.dart';
 
-class JoinGroupView extends StatelessWidget {
-  JoinGroupView({super.key});
+class JoinGroupView extends StatefulWidget {
+  const JoinGroupView({super.key});
 
-  final Set<String> selectedCourses = {};
+  @override
+  State<JoinGroupView> createState() => _JoinGroupViewState();
+}
+
+class _JoinGroupViewState extends State<JoinGroupView> {
+  final Set<String> _selectedCourses = {};
+
+  List<GroupCard> _matchedGroups = [];
 
   Widget courseFilters(List<String> courseTitles) => SizedBox(
         height: 60,
@@ -38,9 +49,9 @@ class JoinGroupView extends StatelessWidget {
                   courseTitles[index],
                   valueCallback: (courseTitle, toggled) {
                     if (toggled) {
-                      selectedCourses.add(courseTitle);
+                      _selectedCourses.add(courseTitle);
                     } else {
-                      selectedCourses.remove(courseTitle);
+                      _selectedCourses.remove(courseTitle);
                     }
                   },
                 ),
@@ -49,6 +60,13 @@ class JoinGroupView extends StatelessWidget {
           ),
         ),
       );
+
+  Future _startMatching(BuildContext buildContext) async {
+    final userId = buildContext.read<AuthenticationService>().state.userId;
+    final funcService = buildContext.read<FunctionsService>();
+
+    final rawDataPoints = await funcService.getOptimalMatches(userId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +94,7 @@ class JoinGroupView extends StatelessWidget {
               width: 30,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async => await _startMatching(context),
               child: const Text("Start search!"),
             ),
           ],
@@ -98,23 +116,11 @@ class JoinGroupView extends StatelessWidget {
             blendMode: BlendMode.dstIn,
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: 10,
-              itemBuilder: (context, index) => const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-                child: GroupCard(
-                  title: "study-moon-werewolves",
-                  description:
-                      "Wir sind eine mega coole study group mit lauter netten Leuten und freuen uns auf deine Anfrage!",
-                  matchScore: 0.87,
-                  courseTitles: [
-                    "Algorithmen & Datenstrukturen",
-                    "Lineare Algebra",
-                  ],
-                  learningMethods: [
-                    LearningMethod.workTogether,
-                    LearningMethod.recapLecture,
-                  ],
-                ),
+              itemCount: _matchedGroups.length,
+              itemBuilder: (context, index) => Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+                child: _matchedGroups[index],
               ),
             ),
           ),
