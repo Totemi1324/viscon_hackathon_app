@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/functions_service.dart';
 import '../bloc/authentication_service.dart';
+import '../bloc/database_service.dart';
 
 import '../models/learning_method.dart';
 import './toggle_button.dart';
@@ -18,7 +19,7 @@ class JoinGroupView extends StatefulWidget {
 class _JoinGroupViewState extends State<JoinGroupView> {
   final Set<String> _selectedCourses = {};
 
-  List<GroupCard> _matchedGroups = [];
+  final List<GroupCard> _matchedGroups = [];
 
   Widget courseFilters(List<String> courseTitles) => SizedBox(
         height: 60,
@@ -62,10 +63,24 @@ class _JoinGroupViewState extends State<JoinGroupView> {
       );
 
   Future _startMatching(BuildContext buildContext) async {
+    _matchedGroups.clear();
     final userId = buildContext.read<AuthenticationService>().state.userId;
     final funcService = buildContext.read<FunctionsService>();
+    final dbService = buildContext.read<DatabaseService>();
 
     final rawDataPoints = await funcService.getOptimalMatches(userId);
+    for (var dataPoint in rawDataPoints) {
+      final groupData = await dbService.getGroup(dataPoint.groupId);
+      if (groupData != null) {
+        _matchedGroups.add(GroupCard(
+            title: groupData.title,
+            description: groupData.publicDescription ?? "",
+            courseTitles: groupData.courses ?? [],
+            learningMethods: []));
+      }
+    }
+
+    setState(() {});
   }
 
   @override

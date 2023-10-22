@@ -19,28 +19,29 @@ class DatabaseService extends Cubit<UserData> {
 
   //Database interaction
   Future createNewUser(String userId) async {
-    final newUserRef = getDocRefFromUserId(userId);      
+    final newUserRef = getDocRefFromUserId(userId);
     final userData = UserData.defaultUser().toFirestore();
-      try {
-        newUserRef.set(userData);
-      }
-      catch (e) {
-        return;
-      }
+    try {
+      newUserRef.set(userData);
+    } catch (e) {
+      return;
+    }
   }
 
-  Future createNewGroup(String groupId, String ownerId, String title, List<String> courses, 
-    String privateDescription, String publicDescription, {List<bool>? studyTime}) async {
-
+  Future createNewGroup(String groupId, String ownerId, String title,
+      List<String> courses, String privateDescription, String publicDescription,
+      {List<bool>? studyTime}) async {
     final newGroupRef = _database.collection('groups').doc(groupId);
 
-    final coursePreferences = <String, GroupCourseProperties> {};
+    final coursePreferences = <String, GroupCourseProperties>{};
 
     for (var course in courses) {
-      coursePreferences.putIfAbsent(course, GroupCourseProperties.defaultProps());\
+      coursePreferences.putIfAbsent(
+          course, () => GroupCourseProperties.defaultProps());
     }
 
-    final groupData = GroupData(ownerId: ownerId, 
+    final groupData = GroupData(
+      ownerId: ownerId,
       title: title,
       members: [ownerId],
       courses: courses,
@@ -48,22 +49,22 @@ class DatabaseService extends Cubit<UserData> {
       publicDescription: publicDescription,
       studyTime: studyTime,
       courseProperties: coursePreferences,
-      );
-      try {
-        newGroupRef.set(group_data.toFirestore());
-      }
-      catch (e) {
-        return;
-      }
+    );
+    try {
+      newGroupRef.set(groupData.toFirestore());
+    } catch (e) {
+      return;
+    }
   }
 
   Future createNewUserCoursePreferences(String userId, String courseId) async {
-    final newPrefRef = _database.collection("userCoursePreferences").doc(getUserCoursePreferenceId(userId, courseId));
+    final newPrefRef = _database
+        .collection("userCoursePreferences")
+        .doc(getUserCoursePreferenceId(userId, courseId));
     final prefData = UserCoursePreferences.defaultPrefs(courseId);
     try {
       newPrefRef.set(prefData.toFirestore());
-    }
-    catch (e) {
+    } catch (e) {
       return;
     }
   }
@@ -71,26 +72,22 @@ class DatabaseService extends Cubit<UserData> {
   Future updateUserData(
       String userId, List<String> courses, int groupSize, List<String> groups,
       {String? firstName, String? lastName, List<bool>? studyTime}) async {
-    Map<String, dynamic>? userData;
     try {
-      userData = 
-        (await _database.collection('users').doc(userId).get()).data();
+      final userDataRef = _database.collection("users").doc(userId);
 
-      userData!['courses'] = courses;
-      userData!['groupSize'] = groupSize;
-      userData!['groups'] = groups;
+      userDataRef.update({"courses": courses});
+      userDataRef.update({"groupSize": groupSize});
+      userDataRef.update({"groups": groups});
       if (firstName != null) {
-        userData!["firstName"] = firstName;
+        userDataRef.update({"firstName": firstName});
       }
       if (lastName != null) {
-        userData!["lastName"] = lastName;
+        userDataRef.update({"lastName": lastName});
       }
       if (studyTime != null) {
-        userData!['studyTime'] = studyTime;
+        userDataRef.update({"studyTime": studyTime});
       }
-      _database.collection("users").doc(userId).set(userData!);
-    }
-    catch (e) {
+    } catch (e) {
       return;
     }
   }
@@ -117,19 +114,19 @@ class DatabaseService extends Cubit<UserData> {
       String userCoursePreferenceId, String dataPoint) async {
     //dataPoint is the Name of the data point in Firestore
     try {
-      final docSnap = 
-        await _database.collection('userCoursePreferences').doc(userCoursePreferenceId).get();
+      final docSnap = await _database
+          .collection('userCoursePreferences')
+          .doc(userCoursePreferenceId)
+          .get();
       if (docSnap.exists && docSnap.data() != null) {
-        try{
+        try {
           return docSnap.data()![dataPoint];
-        }
-        catch (e) {
+        } catch (e) {
           return null;
         }
       }
       return null;
-    }
-    catch (e) {
+    } catch (e) {
       return null;
     }
   }
@@ -140,36 +137,29 @@ class DatabaseService extends Cubit<UserData> {
 
   Future<GroupData?> getGroup(String groupId) async {
     try {
-      final docSnap = 
-        await _database.collection("groups").doc(groupId).get();
+      final docSnap = await _database.collection("groups").doc(groupId).get();
       if (docSnap.exists) {
         return GroupData.fromFirestore(docSnap);
-      }
-      else {
+      } else {
         return null;
       }
-    }
-    catch (e) {
+    } catch (e) {
       return null;
     }
   }
 
-  
-
   String getUserCoursePreferenceId(String userId, String courseId) {
-    return userId + "-" + courseId;
+    return "$userId-$courseId";
   }
 
   Future<DocumentSnapshot?> getDocSnapFromUserId(String userId) async {
     try {
-      final docSnap = 
-        await _database.collection('users').doc(userId).get();
-        if (docSnap.exists) {
-          return docSnap;
-        }
-        return null;
-    }
-    catch (e) {
+      final docSnap = await _database.collection('users').doc(userId).get();
+      if (docSnap.exists) {
+        return docSnap;
+      }
+      return null;
+    } catch (e) {
       return null;
     }
   }
@@ -181,19 +171,12 @@ class DatabaseService extends Cubit<UserData> {
   Future<T?> getUserDataPoint<T>(String userId, String dataPoint) async {
     //dataPoint is the Name of the data point in Firestore
     try {
-      final docSnap = 
-        await (await getDocSnapFromUserId(userId));
-      if (docSnap != null || docSnap!.exists) {
-        try {
-          return (docSnap!.data() as Map)[dataPoint];
-        }
-        catch (e) {
-          return null;
-        }
+      final docSnap = await getDocSnapFromUserId(userId);
+      if (docSnap != null && docSnap.exists) {
+        return (docSnap.data() as Map)[dataPoint];
       }
       return null;
-    }
-    catch (e) {
+    } catch (e) {
       return null;
     }
   }

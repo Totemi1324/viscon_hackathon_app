@@ -5,7 +5,8 @@ enum LearningMethod {
   recapLecture,
   solveExercises,
   compareWork,
-  explainMaterial
+  explainMaterial,
+  learnTheory
 }
 
 String learningMethodToString(LearningMethod method) {
@@ -24,7 +25,26 @@ String learningMethodToString(LearningMethod method) {
       return "compare work";
     case LearningMethod.explainMaterial:
       return "explain material";
+    case LearningMethod.learnTheory:
+      return "learn theory";
     default:
       return "NaN";
+  }
+}
+
+LearningMethod fromString(String method) {
+  switch (method) {
+    case "compareWork":
+      return LearningMethod.compareWork;
+    case "exercises":
+      return LearningMethod.solveExercises;
+    case "learnTheory":
+      return LearningMethod.learnTheory;
+    case "lectureRecap":
+      return LearningMethod.recapLecture;
+    case "workTogether":
+      return LearningMethod.workTogether;
+    default:
+      return LearningMethod.none;
   }
 }

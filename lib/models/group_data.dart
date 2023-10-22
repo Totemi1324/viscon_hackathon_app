@@ -24,24 +24,26 @@ class GroupData {
   });
 
   factory GroupData.fromFirestore(DocumentSnapshot docSnap) {
-    Map<String, GroupCourseProperties> coursePreferencesLocal =
+    Map<String, GroupCourseProperties> coursePropertiesLocal =
         <String, GroupCourseProperties>{};
-    Map<String, Map> coursePreferencesRaw = docSnap.get('coursePreferences');
+    Map<String, dynamic> coursePropertiesRaw = docSnap.get('courseProperties');
 
-    coursePreferencesRaw.forEach((key, value) {
-      coursePreferencesLocal.putIfAbsent(
-          key, () => GroupCourseProperties.fromMap(value));
-    });
+    for (var key in coursePropertiesRaw.keys) {
+      final coursePropertyTable =
+          coursePropertiesRaw[key] as Map<String, dynamic>;
+      coursePropertiesLocal.putIfAbsent(
+          key, () => GroupCourseProperties.fromMap(coursePropertyTable));
+    }
 
     return GroupData(
-      ownerId: docSnap.get('ownerID'),
-      title: docSnap.get('title'),
-      members: docSnap.get('members'),
-      courses: docSnap.get('courses'),
-      studyTime: docSnap.get('studyTime'),
-      courseProperties: coursePreferencesLocal,
-      privateDescription: docSnap.get('privateDescription'),
-      publicDescription: docSnap.get('publicDescription'),
+      ownerId: docSnap.get('ownerID') as String,
+      title: docSnap.get('title') as String,
+      members: (docSnap.get('members') as List<dynamic>).cast<String>(),
+      courses: (docSnap.get('courses') as List<dynamic>).cast<String>(),
+      studyTime: (docSnap.get('studyTime') as List<dynamic>).cast<bool>(),
+      courseProperties: coursePropertiesLocal,
+      privateDescription: docSnap.get('privateDescription') as String,
+      publicDescription: docSnap.get('publicDescription') as String,
     );
   }
 
