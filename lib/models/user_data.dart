@@ -36,12 +36,12 @@ class UserData {
   }
 
   factory UserData.fromFirestore(DocumentSnapshot docSnap) {
-    return UserData(courses: docSnap.get('groups'), 
-      firstName: docSnap.get('firstName'),
-      groupSize: docSnap.get('groupSize'),
-      groups: docSnap.get('groups'),
-      lastName: docSnap.get('lastName'),
-      studyTime: docSnap.get('studyTime'),
+    return UserData(courses: (docSnap.get('groups') as List<dynamic>).cast<String>(), 
+      firstName: docSnap.get('firstName') as String,
+      groupSize: docSnap.get('groupSize') as int,
+      groups: (docSnap.get('groups') as List<dynamic>).cast<String>(),
+      lastName: docSnap.get('lastName') as String,
+      studyTime: (docSnap.get('studyTime') as List<dynamic>).cast<bool>(),
       );
   }
 }
