@@ -224,10 +224,22 @@ class _SignupFormState extends State<SignupForm> {
               height: 50,
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.titleMedium,
+                padding: const EdgeInsets.all(20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                elevation: 0,
+              ),
               onPressed: _isLoading ? null : () => _onSignUpPressed(context),
-              child: _isLoading
-                  ? const Text("Please wait...")
-                  : const Text("Sign up"),
+              child: Container(
+                width: 100,
+                alignment: Alignment.center,
+                child: _isLoading
+                    ? const Text("Please wait...")
+                    : const Text("Sign up"),
+              ),
             ),
           ],
         ),

@@ -171,10 +171,22 @@ class _LogInFormState extends State<LogInForm> {
               height: 50,
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.titleMedium,
+                padding: const EdgeInsets.all(20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                elevation: 0,
+              ),
               onPressed: _isLoading ? null : () => _onSignInPressed(context),
-              child: _isLoading
-                  ? const Text("Please wait...")
-                  : const Text("Log in"),
+              child: Container(
+                width: 100,
+                alignment: Alignment.center,
+                child: _isLoading
+                    ? const Text("Please wait...")
+                    : const Text("Log in"),
+              ),
             ),
           ],
         ),

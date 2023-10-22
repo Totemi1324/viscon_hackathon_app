@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:viscon_hackathon_app/screens/base/flat.dart';
+import 'package:flutter_gen/gen/assets.gen.dart';
+import 'package:rive/rive.dart';
 
+import './base/flat.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
 
@@ -17,19 +19,60 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 200,
+                child: RiveAnimation.asset(
+                  Assets.animations.nerdherdWelcomescreen,
+                  fit: BoxFit.contain,
+                  stateMachines: const ["Main"],
+                ),
+              ),
+              Text(
+                "NerdHerd",
+                style: Theme.of(context)
+                    .textTheme
+                    .displayMedium!
+                    .copyWith(fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.titleMedium,
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 0,
+                ),
                 onPressed: () =>
                     Navigator.of(context).pushNamed(SignUpScreen.routeName),
-                child: const Text("Sign up"),
+                child: Container(
+                  width: 100,
+                  alignment: Alignment.center,
+                  child: const Text("Sign up"),
+                ),
               ),
-              Container(
-                height: 50,
+              const SizedBox(
+                height: 30,
               ),
-              ElevatedButton(
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.titleMedium,
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
                 onPressed: () =>
                     Navigator.of(context).pushNamed(LogInScreen.routeName),
-                child: const Text("Log in"),
-              )
+                child: Container(
+                  width: 100,
+                  alignment: Alignment.center,
+                  child: const Text("Log in"),
+                ),
+              ),
             ],
           ),
         ),
