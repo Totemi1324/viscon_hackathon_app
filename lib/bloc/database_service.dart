@@ -173,7 +173,19 @@ class DatabaseService extends Cubit<UserData> {
     try {
       final docSnap = await getDocSnapFromUserId(userId);
       if (docSnap != null && docSnap.exists) {
-        return (docSnap.data() as Map)[dataPoint];
+        return ((docSnap.data() as Map)[dataPoint]) as T;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<String?> getCourseTitle(String courseId) async {
+    try {
+      final docSnap = await _database.collection('courses').doc(courseId).get();
+      if(docSnap.exists) {
+        return docSnap.get('title') as String;
       }
       return null;
     } catch (e) {
