@@ -26,7 +26,7 @@ class GroupData {
   factory GroupData.fromFirestore(DocumentSnapshot docSnap) {
     Map<String, GroupCourseProperties> coursePropertiesLocal =
         <String, GroupCourseProperties>{};
-    Map<String, dynamic> coursePropertiesRaw = docSnap.get('courseProperties');
+    Map<String, dynamic> coursePropertiesRaw = docSnap.get('courseProperties') as Map<String, dynamic>;
 
     for (var key in coursePropertiesRaw.keys) {
       final coursePropertyTable =

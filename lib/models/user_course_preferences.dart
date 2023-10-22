@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserCoursePreferences {
   String courseId;
-  List<bool> learnMethods;
+  Map<String, bool> learnMethods;
   int courseSkilLevel;
   bool homogenes;
 
@@ -17,14 +17,27 @@ class UserCoursePreferences {
         courseId: courseId,
         courseSkilLevel: 1,
         homogenes: false,
-        learnMethods: [false, false, false, false, false,],
+        learnMethods: <String, bool> {
+          "compareWork" : false,
+          "exercises" : false,
+          "learnTheory" : false,
+          "lectureRecap" : false,
+          "workTogether" : false,
+        },
       );
 
   factory UserCoursePreferences.fromFirestore(DocumentSnapshot docSnap) {
-    return UserCoursePreferences(courseId: docSnap.get('courseId'), 
-      courseSkilLevel: docSnap.get('courseSkilLevel'), 
-      homogenes: docSnap.get('homogenes'), 
-      learnMethods: docSnap.get('learnMethods'),
+    final learnMethodsLocal = <String, bool> {}; 
+    final learnMethodsRaw = docSnap.get('learnMethods') as Map<String, bool>;
+
+    learnMethodsRaw.forEach((key, value) {
+      learnMethodsLocal.putIfAbsent(key, () => value);
+    });
+
+    return UserCoursePreferences(courseId: docSnap.get('courseId') as String, 
+      courseSkilLevel: docSnap.get('courseSkilLevel') as int, 
+      homogenes: docSnap.get('homogenes') as bool, 
+      learnMethods: learnMethodsLocal,
       );
   }
 
