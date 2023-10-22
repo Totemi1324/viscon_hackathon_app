@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen/assets.gen.dart';
+
 import '../../bloc/theme_service.dart';
+import '../../bloc/authentication_service.dart';
+import '../home_screen.dart';
 
 class WithTabBar extends StatefulWidget {
   final Widget myStudyGroupsBody;
@@ -75,7 +78,12 @@ class _WithTabBarState extends State<WithTabBar>
                 "Log out",
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              onTap: () {},
+              onTap: () async {
+                await context.read<AuthenticationService>().logOut();
+
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    HomeScreen.routeName, (route) => false);
+              },
             ),
           ],
         ),
