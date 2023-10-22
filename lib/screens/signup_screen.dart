@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:viscon_hackathon_app/screens/base/flat.dart';
+import './base/flat.dart';
 
 import '../widgets/signup_form.dart';
 

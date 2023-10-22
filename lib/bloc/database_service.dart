@@ -92,13 +92,29 @@ class DatabaseService extends Cubit<UserData> {
     }
   }
 
+  Future addCourseToUser(String userId, String courseId) async {
+    createNewUserCoursePreferences(userId, courseId);
+    final courses =( (await getDocRefFromUserId(userId).get()).get('courses') as List<dynamic>).cast<String>();
+    courses.add(courseId);
+    getDocRefFromUserId(userId).update({"courses" : courses});
+  }
+
+  Future removeCourseFromUser(String userId, String courseId) async {
+    createNewUserCoursePreferences(userId, courseId);
+    final courses =( (await getDocRefFromUserId(userId).get()).get('courses') as List<dynamic>).cast<String>();
+    courses.remove(courseId);
+    getDocRefFromUserId(userId).update({"courses" : courses});
+  }
+
   Future<List<CourseData>> getCoursesForQuery(String courseId) async {
     final coursesRef = _database.collection("courses");
     List<CourseData> result = [];
 
     try {
-      final candidates =
-          await coursesRef.where("id", isEqualTo: courseId).get();
+      final candidates = await coursesRef
+          .where("id", isGreaterThanOrEqualTo: courseId)
+          .where("id", isLessThanOrEqualTo: courseId + "\uf8ff")
+          .get();
       for (var docSnapshot in candidates.docs) {
         //read out data
         result.add(CourseData.fromFirestore(docSnapshot));
@@ -173,11 +189,61 @@ class DatabaseService extends Cubit<UserData> {
     try {
       final docSnap = await getDocSnapFromUserId(userId);
       if (docSnap != null && docSnap.exists) {
-        return (docSnap.data() as Map)[dataPoint];
+        return ((docSnap.data() as Map)[dataPoint]) as T;
       }
       return null;
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<String?> getCourseTitle(String courseId) async {
+    try {
+      final docSnap = await _database.collection('courses').doc(courseId).get();
+      if(docSnap.exists) {
+        return docSnap.get('title') as String;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future addUserToGroup(String userId, String groupId) async {
+    try {
+      final groupRef = _database.collection('groups').doc(groupId);
+      final userRef = _database.collection('users').doc(userId);
+      final docSnapGroup = await groupRef.get();
+      final docSnapUser = await userRef.get();
+      if (docSnapGroup.exists && docSnapUser.exists) {
+        final members = (docSnapGroup.get('members') as List<dynamic>).cast<String>();
+        final groups = (docSnapUser.get('groups') as List<dynamic>).cast<String>();
+        members.add(userId);
+        groups.add(groupId);
+        groupRef.update({'members' : members});
+        userRef.update({'groups' : groups});
+      }
+    } catch (e) {
+      return;
+    }
+  }
+
+  Future removeUserFromGroup(String userId, String groupId) async {
+    try {
+      final groupRef = _database.collection('groups').doc(groupId);
+      final userRef = _database.collection('users').doc(userId);
+      final docSnapGroup = await groupRef.get();
+      final docSnapUser = await userRef.get();
+      if (docSnapGroup.exists && docSnapUser.exists) {
+        final members = (docSnapGroup.get('members') as List<dynamic>).cast<String>();
+        final groups = (docSnapUser.get('groups') as List<dynamic>).cast<String>();
+        members.remove(userId);
+        groups.remove(groupId);
+        groupRef.update({'members' : members});
+        userRef.update({'groups' : groups});
+      }
+    } catch (e) {
+      return;
     }
   }
 }

@@ -33,4 +33,14 @@ class ThemeService extends Cubit<ThemeData> {
       emit(_lightTheme);
     }
   }
+
+  void toggleTheme() {
+    if (state.brightness == Brightness.light) {
+      currentTheme = _darkTheme;
+      emit(_darkTheme);
+    } else {
+      currentTheme = _lightTheme;
+      emit(_lightTheme);
+    }
+  }
 }

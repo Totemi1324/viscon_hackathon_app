@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen/assets.gen.dart';
+
+import '../user_preferences_screen.dart';
+import '../../bloc/theme_service.dart';
+import '../../bloc/authentication_service.dart';
+import '../home_screen.dart';
 
 class WithTabBar extends StatefulWidget {
   final Widget myStudyGroupsBody;
@@ -50,7 +56,43 @@ class _WithTabBarState extends State<WithTabBar>
     return Scaffold(
       extendBodyBehindAppBar: false,
       backgroundColor: Theme.of(context).colorScheme.surface,
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            ListTile(
+              title: Text(
+                "Edit your preferences",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              onTap: () => Navigator.of(context)
+                  .pushNamed(UserPreferencesScreen.routeName),
+            ),
+            ListTile(
+              title: Text(
+                "Switch to ${context.read<ThemeService>().state.brightness == Brightness.dark ? "light theme" : "dark theme"}",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              onTap: () => context.read<ThemeService>().toggleTheme(),
+            ),
+            ListTile(
+              title: Text(
+                "Log out",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              onTap: () async {
+                await context.read<AuthenticationService>().logOut();
+
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    HomeScreen.routeName, (route) => false);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Theme.of(context).colorScheme.onSurface),
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Row(

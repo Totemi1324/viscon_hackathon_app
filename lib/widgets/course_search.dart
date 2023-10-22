@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuple/tuple.dart';
 import '../bloc/database_service.dart';
 
 import '../models/course_data.dart';
@@ -19,11 +18,12 @@ class _CourseSearchState extends State<CourseSearch> {
   List<CourseData> _currentResults = [];
   final _formKey = GlobalKey<FormState>();
 
-  String generateLecturerString(List<Tuple3> lecturerData) {
+  String generateLecturerString(List<Map<String, String>> lecturerData) {
     String res = "";
     for (var i = 0; i < lecturerData.length; i++) {
       final lecturer = lecturerData[i];
-      res += lecturer.item3 + " " + lecturer.item1 + " " + lecturer.item2;
+      res +=
+          "${lecturer["title"]} ${lecturer["first_name"]} ${lecturer["last_name"]}";
       if (i != lecturerData.length - 1) {
         res += ", ";
       }
@@ -35,7 +35,7 @@ class _CourseSearchState extends State<CourseSearch> {
     final dbService = buildContext.read<DatabaseService>();
     _currentResults = await dbService.getCoursesForQuery(query);
 
-    print(_currentResults.length);
+    setState(() {});
   }
 
   @override
@@ -79,48 +79,53 @@ class _CourseSearchState extends State<CourseSearch> {
             ),
           ),
         ),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: _currentResults.length,
-          itemBuilder: (context, index) {
-            final result = _currentResults[index];
-            return Padding(
-              padding: const EdgeInsets.all(8),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.symmetric(
-                    horizontal: BorderSide(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.5),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _currentResults.length,
+            itemBuilder: (context, index) {
+              final result = _currentResults[index];
+              return Padding(
+                padding: const EdgeInsets.all(8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.symmetric(
+                      horizontal: BorderSide(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.5),
+                      ),
                     ),
                   ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        result.id,
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
+                      Text(
+                        result.title ?? "",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        generateLecturerString(result.lecturer),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      result.id,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary),
-                    ),
-                    Text(
-                      result.title ?? "",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    /*Text(
-                      generateLecturerString(result.lecturers),
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                    ),*/
-                  ],
-                ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ],
     );
