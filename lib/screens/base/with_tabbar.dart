@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen/assets.gen.dart';
 
+import '../user_preferences_screen.dart';
 import '../../bloc/theme_service.dart';
 import '../../bloc/authentication_service.dart';
 import '../home_screen.dart';
@@ -64,7 +65,8 @@ class _WithTabBarState extends State<WithTabBar>
                 "Edit your preferences",
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              onTap: () {},
+              onTap: () => Navigator.of(context)
+                  .pushNamed(UserPreferencesScreen.routeName),
             ),
             ListTile(
               title: Text(

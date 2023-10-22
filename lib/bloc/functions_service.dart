@@ -22,6 +22,6 @@ class FunctionsService extends Cubit<int> {
       result.add(MatchedGroup.fromJson(dataPointMap));
     }
 
-    return result;
+    return result.reversed.take(10).toList();
   }
 }
