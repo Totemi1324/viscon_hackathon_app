@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen/assets.gen.dart';
+import '../../bloc/theme_service.dart';
 
 class WithTabBar extends StatefulWidget {
   final Widget myStudyGroupsBody;
@@ -50,7 +52,37 @@ class _WithTabBarState extends State<WithTabBar>
     return Scaffold(
       extendBodyBehindAppBar: false,
       backgroundColor: Theme.of(context).colorScheme.surface,
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            ListTile(
+              title: Text(
+                "Edit your preferences",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                "Switch to ${context.read<ThemeService>().state.brightness == Brightness.dark ? "light theme" : "dark theme"}",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              onTap: () => context.read<ThemeService>().toggleTheme(),
+            ),
+            ListTile(
+              title: Text(
+                "Log out",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Theme.of(context).colorScheme.onSurface),
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Row(
